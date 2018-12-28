@@ -1,0 +1,35 @@
+<html>
+
+<body>
+    <form action="/logout" method="post">
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+        <input type="submit" value="Sign Out"/>
+    </form>
+    <div>
+        <form method="post">
+            <input type="text" name="firstName" placeholder="Введите имя">
+            <input type="text" name="secondName" placeholder="Введите фамилию">
+            <input type="text" name="phoneNumber" placeholder="Введите номер телефона">
+            <input type="number" name="points" placeholder="Введите количество начисленных баллов">
+            <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+            <button type="submit">Добавить</button>
+        </form>
+    </div>
+    <div>Список клиентов</div>
+    <form method="post" action="filter">
+        <input type="text" name="firstName">
+        <input type="hidden" name="_csrf" value="{{_csrf.token}}" />
+        <button type="submit">Найти</button>
+    </form>
+    {{#customers}}
+        <div>
+            <b>{{id}}</b>
+            <span>{{firstName}}</span>
+            <span>{{secondName}}</span>
+            <span>{{phoneNumber}}</span>
+            <span>{{points}}</span>
+            <strong>{{id}}</strong>
+        </div>
+    {{/customers}}
+</body>
+</html>
