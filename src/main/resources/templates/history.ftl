@@ -1,4 +1,5 @@
 <#import "parts/common.ftl" as c>
+<#import "parts/pager.ftl" as p>
 
 <@c.page>
 
@@ -22,6 +23,7 @@
                 <button type="submit" class="btn btn-primary ml-2">Search</button>
     </form>
 
+    <@p.pager url page />
     <div>
     <table class="table">
         <thead class="thead-dark">
@@ -35,7 +37,7 @@
             </tr>
         </thead>
     <tbody>
-    <#list histories as history>
+    <#list page.content as history>
         <tr>
         <td>${history.date}</td>
         <td>${history.total}</td>
@@ -48,4 +50,5 @@
     </tbody>
     </table>
     </div>
+    <@p.pager url page />
 </@c.page>

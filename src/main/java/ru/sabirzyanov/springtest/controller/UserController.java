@@ -10,9 +10,7 @@ import ru.sabirzyanov.springtest.domain.Role;
 import ru.sabirzyanov.springtest.domain.User;
 import ru.sabirzyanov.springtest.service.UserService;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 

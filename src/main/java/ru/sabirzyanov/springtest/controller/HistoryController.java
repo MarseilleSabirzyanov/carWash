@@ -2,6 +2,10 @@ package ru.sabirzyanov.springtest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -52,32 +56,33 @@ public class HistoryController {
             @RequestParam(required = false, defaultValue = "2000-01-01") @DateTimeFormat(pattern="yyyy-MM-dd") Date dateFrom,
             @RequestParam(required = false, defaultValue = "today") @DateTimeFormat(pattern="yyyy-MM-dd") Date dateTo,
             @RequestParam(required = false, defaultValue = "") String admin,
-            Model model) {
-        Iterable<History> histories;
+            Model model,
+            @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        Page<History> page;
 
         if(username != null && !username.isEmpty() && admin != null && !admin.isEmpty() && dateFrom != null && dateTo != null) {
-            histories = historyRepository.findByUserIdAndAdminIdAndDateBetween(
+            page = historyRepository.findByUserIdAndAdminIdAndDateBetween(
                     userRepository.findByUsername(username).getId(),
                     userRepository.findByUsername(admin).getId(),
-                    dateFrom, dateTo
+                    dateFrom, dateTo, pageable
             );
-            model.addAttribute("histories", histories);
+            model.addAttribute("page", page);
         }
         else if (username != null && !username.isEmpty()) {
-            histories = historyRepository.findByUserIdAndDateBetween(userRepository.findByUsername(username).getId(), dateFrom, dateTo);
-            model.addAttribute("histories", histories);
+            page = historyRepository.findByUserIdAndDateBetween(userRepository.findByUsername(username).getId(), dateFrom, dateTo, pageable);
+            model.addAttribute("page", page);
         } else if (admin != null && !admin.isEmpty()) {
-            histories = historyRepository.findByAdminIdAndDateBetween(userRepository.findByUsername(admin).getId(), dateFrom, dateTo);
-            model.addAttribute("histories", histories);
+            page = historyRepository.findByAdminIdAndDateBetween(userRepository.findByUsername(admin).getId(), dateFrom, dateTo, pageable);
+            model.addAttribute("page", page);
         }
             else {
-                histories = historyRepository.findByDateBetween(dateFrom, dateTo);
-                model.addAttribute("histories", histories);
+                page = historyRepository.findByDateBetween(dateFrom, dateTo, pageable);
+                model.addAttribute("page", page);
         }
 
         model.addAttribute("username", username);
-        /*model.addAttribute("dateFrom", dateFrom);
-        model.addAttribute("dateTo", dateTo);*/
+        model.addAttribute("url", "/history");
         model.addAttribute("admin", admin);
 
         return "history";
