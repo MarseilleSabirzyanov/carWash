@@ -53,7 +53,6 @@ public class HistoryController {
             @RequestParam(required = false, defaultValue = "today") @DateTimeFormat(pattern="yyyy-MM-dd") Date dateTo,
             @RequestParam(required = false, defaultValue = "") String admin,
             Model model) {
-        //model.addAttribute("histories", historyRepository.findAll());
         Iterable<History> histories;
 
         if(username != null && !username.isEmpty() && admin != null && !admin.isEmpty() && dateFrom != null && dateTo != null) {

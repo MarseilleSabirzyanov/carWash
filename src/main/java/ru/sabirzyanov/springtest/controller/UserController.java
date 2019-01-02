@@ -10,6 +10,10 @@ import ru.sabirzyanov.springtest.domain.Role;
 import ru.sabirzyanov.springtest.domain.User;
 import ru.sabirzyanov.springtest.service.UserService;
 
+import javax.jws.soap.SOAPBinding;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 
@@ -25,10 +29,17 @@ public class UserController {
     public String userList(@RequestParam(required = false, defaultValue = "") String username,
                                                                               Model model
     ) {
-        Iterable<User> users = userService.findAll();
+        Iterable<User> users;
+        if (username != null && !username.isEmpty()) {
+            List<User> userList = new ArrayList<>();
+            userList.add(userService.findUser(username));
+            model.addAttribute("users", userList);
+        } else {
+            users = userService.findAll();
+            model.addAttribute("users", users);
+        }
 
         model.addAttribute("username", username);
-        model.addAttribute("users", users);
 
         return "user";
     }

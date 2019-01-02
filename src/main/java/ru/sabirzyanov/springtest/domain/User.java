@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -19,7 +20,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "usr")
-public class User implements UserDetails{
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -86,4 +87,5 @@ public class User implements UserDetails{
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
     }
+
 }

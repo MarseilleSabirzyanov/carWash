@@ -96,6 +96,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
+    public User findUser(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     public boolean saveUser(User user,
                          String username,
                          String email,
@@ -165,4 +169,6 @@ public class UserService implements UserDetailsService {
             sendMessage(user);
         }
     }
+
+
 }
