@@ -1,14 +1,26 @@
 <#import "parts/common.ftl" as c>
 
 <@c.page>
+
+    <form method="get" action="/history" class="form-inline mb-3">
     <div class="form-row">
-    <div class="form-group col-md-6">
-    <form method="get" action="/history" class="form-inline">
-    <input type="text" name="filter" class="form-control" value="${filter!}" placeholder="Search by user name">
-    <button type="submit" class="btn btn-primary ml-2">Search</button>
+        <div class="form-group col-md-6">
+            <input type="text" name="username" class="form-control" id="username" value="${username!}" placeholder="Search by username">
+        </div>
+         <div class="form-group col-md-6">
+                <input type="text" name="admin" class="form-control" value="${admin!}" placeholder="Search by admin name">
+        </div>
+    </div>
+    <div class="form-row ml-2">
+        <div class="form-group col-md-6">
+                <input type="date" name="dateFrom" class="form-control" value="${dateFrom!}" placeholder="Search by date">
+        </div>
+        <div class="form-group col-md-6">
+                <input type="date" name="dateTo" class="form-control" value="${dateTo!}" placeholder="Search by date">
+        </div>
+    </div>
+                <button type="submit" class="btn btn-primary ml-2">Search</button>
     </form>
-    </div>
-    </div>
 
     <div>
     <table class="table">

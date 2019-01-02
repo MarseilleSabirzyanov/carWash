@@ -30,7 +30,7 @@ public class UserController {
         model.addAttribute("username", username);
         model.addAttribute("users", users);
 
-        return "userList";
+        return "user";
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping
+    @PostMapping("{user}")
     public String userSave(
             @AuthenticationPrincipal User admin,
             Model model,
@@ -51,7 +51,7 @@ public class UserController {
             @RequestParam String email,
             @RequestParam Long score,
             @RequestParam Map<String, String> form,
-            @RequestParam("userId") User user
+            @PathVariable @RequestParam("userId") User user
     ) {
 
         if(!userService.saveUser(user, username, email, score, admin, form)) {

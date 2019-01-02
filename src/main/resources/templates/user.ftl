@@ -8,7 +8,7 @@
     </#if>
     <div class="form-row">
         <div class="form-group col-md-6">
-            <form method="get" action="/userList" class="form-inline">
+            <form method="get" action="/user" class="form-inline">
                 <input type="text" name="username" class="form-control" value="${username!}" placeholder="Search by name">
                 <button type="submit" class="btn btn-primary ml-2">Search</button>
             </form>

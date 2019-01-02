@@ -11,7 +11,6 @@
                 </div>
             </#if>
         </div>
-            <#--<input type="text" name="username" value="${user.username}">-->
         <div class="form-group">
             <label for="inputEmail4">Email</label>
             <input type="email" name="email" value="${user.email}" class="form-control" id="inputEmail4" placeholder="Email">
