@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.sabirzyanov.springtest.domain.History;
 import ru.sabirzyanov.springtest.repos.HistoryRepository;
 import ru.sabirzyanov.springtest.repos.UserRepository;
+import ru.sabirzyanov.springtest.service.HistoryService;
+import ru.sabirzyanov.springtest.service.UserService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -29,10 +31,10 @@ import java.util.Date;
 public class HistoryController {
 
     @Autowired
-    HistoryRepository historyRepository;
+    HistoryService historyService;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) throws Exception {
@@ -62,22 +64,23 @@ public class HistoryController {
         Page<History> page;
 
         if(username != null && !username.isEmpty() && admin != null && !admin.isEmpty() && dateFrom != null && dateTo != null) {
-            page = historyRepository.findByUserIdAndAdminIdAndDateBetween(
-                    userRepository.findByUsername(username).getId(),
-                    userRepository.findByUsername(admin).getId(),
+            page = historyService.findUserAdminDate(
+                    userService.findUser(username).getId(),
+                    userService.findUser(admin).getId(),
                     dateFrom, dateTo, pageable
             );
+
             model.addAttribute("page", page);
         }
         else if (username != null && !username.isEmpty()) {
-            page = historyRepository.findByUserIdAndDateBetween(userRepository.findByUsername(username).getId(), dateFrom, dateTo, pageable);
+            page = historyService.findUserDate(userService.findUser(username).getId(), dateFrom, dateTo, pageable);
             model.addAttribute("page", page);
         } else if (admin != null && !admin.isEmpty()) {
-            page = historyRepository.findByAdminIdAndDateBetween(userRepository.findByUsername(admin).getId(), dateFrom, dateTo, pageable);
+            page = historyService.findAdminDate(userService.findUser(username).getId(), dateFrom, dateTo, pageable);
             model.addAttribute("page", page);
         }
             else {
-                page = historyRepository.findByDateBetween(dateFrom, dateTo, pageable);
+                page = historyService.findDate(dateFrom, dateTo, pageable);
                 model.addAttribute("page", page);
         }
 

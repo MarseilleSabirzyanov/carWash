@@ -1,6 +1,10 @@
 package ru.sabirzyanov.springtest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -25,19 +29,22 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public String userList(@RequestParam(required = false, defaultValue = "") String username,
-                                                                              Model model
+                                                                              Model model,
+                           @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Iterable<User> users;
+        Page<User> page;
         if (username != null && !username.isEmpty()) {
             List<User> userList = new ArrayList<>();
-            userList.add(userService.findUser(username));
-            model.addAttribute("users", userList);
+            if (userService.findUser(username) != null )
+                userList.add(userService.findUser(username));
+            model.addAttribute("usersList", userList);
         } else {
-            users = userService.findAll();
-            model.addAttribute("users", users);
+            page = userService.findAll(pageable);
+            model.addAttribute("page", page);
         }
 
         model.addAttribute("username", username);
+        model.addAttribute("url", "/user");
 
         return "user";
     }

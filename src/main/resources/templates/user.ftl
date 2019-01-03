@@ -1,4 +1,5 @@
 <#import "parts/common.ftl" as c>
+<#import "parts/pager.ftl" as p>
 
 <@c.page>
     <#if message??>
@@ -14,22 +15,43 @@
             </form>
         </div>
     </div>
-    <table class="table">
-    <thead class="thead-dark">
-    <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Role</th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    <#list users as user>
+    <#if page??>
+        <@p.pager url page />
+    </#if>
+    <div>
+        <table class="table">
+        <thead class="thead-dark">
         <tr>
-        <td>${user.username}</td>
-        <td><#list user.roles as role>${role}<#sep>, </#list></td>
-        <td><a href="/user/${user.id}">edit</a></td>
+            <th scope="col">Name</th>
+            <th scope="col">Role</th>
+            <th></th>
         </tr>
-    </#list>
-    </tbody>
-    </table>
+        </thead>
+        <#if page??>
+        <tbody>
+            <#list page.content as user>
+                <tr>
+                <td>${user.username}</td>
+                <td><#list user.roles as role>${role}<#sep>, </#list></td>
+                <td><a href="/user/${user.id}">edit</a></td>
+                </tr>
+            </#list>
+        </tbody>
+        </#if>
+        <#if usersList??>
+        <tbody>
+            <#list usersList as user>
+                <tr>
+                <td>${user.username}</td>
+                <td><#list user.roles as role>${role}<#sep>, </#list></td>
+                <td><a href="/user/${user.id}">edit</a></td>
+                </tr>
+            </#list>
+        </tbody>
+        </#if>
+        </table>
+    </div>
+    <#if page??>
+        <@p.pager url page />
+    </#if>
 </@c.page>
