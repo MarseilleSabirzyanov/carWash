@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.sabirzyanov.springtest.domain.History;
-import ru.sabirzyanov.springtest.repos.HistoryRepository;
-import ru.sabirzyanov.springtest.repos.UserRepository;
 import ru.sabirzyanov.springtest.service.HistoryService;
 import ru.sabirzyanov.springtest.service.UserService;
 
@@ -64,20 +62,50 @@ public class HistoryController {
         Page<History> page;
 
         if(username != null && !username.isEmpty() && admin != null && !admin.isEmpty() && dateFrom != null && dateTo != null) {
-            page = historyService.findUserAdminDate(
-                    userService.findUser(username).getId(),
-                    userService.findUser(admin).getId(),
-                    dateFrom, dateTo, pageable
-            );
 
-            model.addAttribute("page", page);
+            if (userService.findUser(username) == null && userService.findUser(admin) == null) {
+                model.addAttribute("errorMessage", "User and admin not found");
+                page = historyService.findDate(dateFrom, dateTo, pageable);
+                model.addAttribute("page", page);
+            }
+            else if (userService.findUser(username) == null) {
+                model.addAttribute("errorMessage", "User not found");
+                page = historyService.findDate(dateFrom, dateTo, pageable);
+                model.addAttribute("page", page);
+            }
+            else if (userService.findUser(admin) == null) {
+                model.addAttribute("errorMessage", "Admin not found");
+                page = historyService.findDate(dateFrom, dateTo, pageable);
+                model.addAttribute("page", page);
+            }
+            else {
+                page = historyService.findUserAdminDate(
+                        userService.findUser(username).getId(),
+                        userService.findUser(admin).getId(),
+                        dateFrom, dateTo, pageable
+                );
+                model.addAttribute("page", page);
+            }
         }
         else if (username != null && !username.isEmpty()) {
-            page = historyService.findUserDate(userService.findUser(username).getId(), dateFrom, dateTo, pageable);
-            model.addAttribute("page", page);
+            if (userService.findUser(username) == null) {
+                model.addAttribute("errorMessage", "User not found");
+                page = historyService.findDate(dateFrom, dateTo, pageable);
+                model.addAttribute("page", page);
+            }
+            else {
+                page = historyService.findUserDate(userService.findUser(username).getId(), dateFrom, dateTo, pageable);
+                model.addAttribute("page", page);
+            }
         } else if (admin != null && !admin.isEmpty()) {
-            page = historyService.findAdminDate(userService.findUser(username).getId(), dateFrom, dateTo, pageable);
-            model.addAttribute("page", page);
+            if (userService.findUser(admin) == null) {
+                model.addAttribute("errorMessage", "Admin not found");
+                page = historyService.findDate(dateFrom, dateTo, pageable);
+                model.addAttribute("page", page);
+            } else {
+                page = historyService.findAdminDate(userService.findUser(username).getId(), dateFrom, dateTo, pageable);
+                model.addAttribute("page", page);
+            }
         }
             else {
                 page = historyService.findDate(dateFrom, dateTo, pageable);

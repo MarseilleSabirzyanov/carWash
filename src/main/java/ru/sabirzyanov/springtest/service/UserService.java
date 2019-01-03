@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 import ru.sabirzyanov.springtest.domain.History;
 import ru.sabirzyanov.springtest.domain.Role;
 import ru.sabirzyanov.springtest.domain.User;
+import ru.sabirzyanov.springtest.exceptions.UserNotFoundException;
 import ru.sabirzyanov.springtest.repos.HistoryRepository;
 import ru.sabirzyanov.springtest.repos.UserRepository;
 
@@ -40,8 +41,8 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
 
-        if (user.getActivationCode() != null) {
-            throw new UsernameNotFoundException("Email not activated");
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
         }
 
         return user;
@@ -97,7 +98,9 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll(pageable);
     }
 
-    public User findUser(String username) {
+    public User findUser(String username){
+        if (userRepository.findByUsername(username) == null)
+            return null;
         return userRepository.findByUsername(username);
     }
 

@@ -35,9 +35,15 @@ public class UserController {
         Page<User> page;
         if (username != null && !username.isEmpty()) {
             List<User> userList = new ArrayList<>();
-            if (userService.findUser(username) != null )
+            if (userService.findUser(username) != null ) {
                 userList.add(userService.findUser(username));
-            model.addAttribute("usersList", userList);
+                model.addAttribute("usersList", userList);
+            }
+            else {
+                page = userService.findAll(pageable);
+                model.addAttribute("errorMessage", "User not found");
+                model.addAttribute("page", page);
+            }
         } else {
             page = userService.findAll(pageable);
             model.addAttribute("page", page);

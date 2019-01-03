@@ -2,6 +2,11 @@
 <#import "parts/pager.ftl" as p>
 
 <@c.page>
+    <#if errorMessage??>
+    <div class="alert alert-danger" role="alert">
+        ${errorMessage!}
+    </div>
+    </#if>
 
     <form method="get" action="/history" class="form-inline mb-3">
     <div class="form-row">

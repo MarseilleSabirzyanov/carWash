@@ -19,15 +19,21 @@ public class HistoryService {
     UserRepository userRepository;
 
     public Page<History> findUserAdminDate(Long userId, Long adminId, Date from, Date to, Pageable pageable) {
-        return historyRepository.findByUserIdAndAdminIdAndDateBetween(userId, adminId, from, to, pageable);
+        if (userRepository.findById(userId).isPresent() && userRepository.findById(adminId).isPresent())
+            return historyRepository.findByUserIdAndAdminIdAndDateBetween(userId, adminId, from, to, pageable);
+        return null;
     }
 
     public Page<History> findUserDate(Long userId, Date from, Date to, Pageable pageable) {
-        return historyRepository.findByUserIdAndDateBetween(userId, from, to, pageable);
+        if (userRepository.findById(userId).isPresent())
+            return historyRepository.findByUserIdAndDateBetween(userId, from, to, pageable);
+        return null;
     }
 
     public Page<History> findAdminDate(Long adminId, Date from, Date to, Pageable pageable) {
-        return historyRepository.findByAdminIdAndDateBetween(adminId, from, to, pageable);
+        if (userRepository.findById(adminId).isPresent())
+            return historyRepository.findByAdminIdAndDateBetween(adminId, from, to, pageable);
+        return null;
     }
 
     public Page<History> findDate(Date from, Date to, Pageable pageable) {

@@ -2,9 +2,9 @@
 <#import "parts/pager.ftl" as p>
 
 <@c.page>
-    <#if message??>
-        <div class="alert alert-${messageType}" role="alert">
-        ${message}
+    <#if errorMessage??>
+        <div class="alert alert-danger" role="alert">
+        ${errorMessage!}
         </div>
     </#if>
     <div class="form-row">
