@@ -1,5 +1,5 @@
 <#import "parts/common.ftl" as c>
-<#import "parts/login1.ftl" as l>
+<#import "parts/login.ftl" as l>
 
 <@c.page>
     <#if Session?? && Session.SPRING_SECURITY_LAST_EXCEPTION??>
@@ -7,9 +7,9 @@
             ${SPRING_SECURITY_LAST_EXCEPTION.message}
         </div>
     </#if>
-    <#if message??>
-        <div class="alert alert-${messageType}" role="alert">
-            ${message}
+    <#if errorMessage??>
+        <div class="alert alert-danger" role="alert">
+        ${errorMessage!}
         </div>
     </#if>
     <@l.login "/login" false/>

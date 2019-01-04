@@ -65,7 +65,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping("{user}")
+    @PostMapping
     public String userSave(
             @AuthenticationPrincipal User admin,
             Model model,
@@ -76,11 +76,12 @@ public class UserController {
             @PathVariable @RequestParam("userId") User user
     ) {
 
-        if(!userService.saveUser(user, username, email, score, admin, form)) {
-            //TODO вывод ошибки о том, что такой юзер существует
-            model.addAttribute("messageType", "danger");
-            model.addAttribute("message", "A user with same username already exist");
+        if (userService.findUser(username) == null) {
+            userService.saveUser(user, username, email, score, admin, form);
         }
+        else
+            //TODO вывод ошибки о том, что такой юзер существует
+            model.addAttribute("errorMessage", "A user with same username already exist");
         return "redirect:/user";
     }
 

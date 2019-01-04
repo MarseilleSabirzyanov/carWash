@@ -1,6 +1,11 @@
 <#import "parts/common.ftl" as c>
 
 <@c.page>
+    <#if errorMessage??>
+        <div class="alert alert-danger" role="alert">
+        ${errorMessage!}
+        </div>
+    </#if>
     <form action="/user" method="post" xmlns="http://www.w3.org/1999/html">
         <div class="form-group">
             <label for="inputUsername">Username</label>

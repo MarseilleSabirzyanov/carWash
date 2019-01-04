@@ -12,7 +12,6 @@ import org.springframework.util.StringUtils;
 import ru.sabirzyanov.springtest.domain.History;
 import ru.sabirzyanov.springtest.domain.Role;
 import ru.sabirzyanov.springtest.domain.User;
-import ru.sabirzyanov.springtest.exceptions.UserNotFoundException;
 import ru.sabirzyanov.springtest.repos.HistoryRepository;
 import ru.sabirzyanov.springtest.repos.UserRepository;
 
@@ -104,16 +103,17 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username);
     }
 
-    public boolean saveUser(User user,
+    public void saveUser(User user,
                          String username,
                          String email,
                          Long score,
                          User admin,
                          Map<String, String> form
     ) {
-        if (user == userRepository.findByUsername(username) || userRepository.findByUsername(username) == null) {
 
             long oldScore = user.getScore();
+
+            String oldUsername = user.getUsername();
 
             user.setUsername(username);
             user.setEmail(email);
@@ -136,7 +136,17 @@ public class UserService implements UserDetailsService {
             Date date = new Date();
             History history = new History(date, score, user, admin);
 
-            if (!score.equals(oldScore)) {
+            if (!oldUsername.equals(username) && !score.equals(oldScore)) {
+                if ((score - oldScore) > 0) {
+                    history.setOp("+" + (score - oldScore) + ", username was changed from " + oldUsername + " to " + username);
+                } else {
+                    history.setOp("-" + (oldScore - score + ", username was changed from " + oldUsername + " to " + username));
+                }
+            }
+            else if (!oldUsername.equals(username)) {
+             history.setOp("Total didn't changed, username was changed from " + oldUsername + " to " + username);
+            }
+            else if (!score.equals(oldScore)) {
                 if ((score - oldScore) > 0) {
                     history.setOp("+" + (score - oldScore));
                 } else {
@@ -144,9 +154,6 @@ public class UserService implements UserDetailsService {
                 }
             } else history.setOp("Total didn't changed!");
             historyRepository.save(history);
-            return true;
-        }
-        return false;
     }
 
     public void updateProfile(User user, String password, String email) {

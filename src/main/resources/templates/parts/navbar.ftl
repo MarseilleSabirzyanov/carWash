@@ -1,5 +1,5 @@
 <#include "security.ftl">
-<#import "login1.ftl" as l>
+<#import "login.ftl" as l>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="/">Qlity</a>
@@ -11,9 +11,6 @@
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
                 <a class="nav-link" href="/">Home</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/main">Messages</a>
             </li>
             <#if isAdmin>
                 <li class="nav-item">
@@ -39,6 +36,8 @@
         <#if user??>
             <div class="navbar-text mr-3">${name}</div>
         </#if>
+        <#if user??>
         <@l.logout />
+        </#if>
     </div>
 </nav>
