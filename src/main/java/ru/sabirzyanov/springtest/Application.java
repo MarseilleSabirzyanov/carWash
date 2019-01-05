@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 //TODO сохранение изменений каждой операции в истории
 //TODO изменение данных юзера
 //TODO поменять id пользователя на число из 9 цифр
-//TODO убрать логин после авторизации
 
 
 @SpringBootApplication

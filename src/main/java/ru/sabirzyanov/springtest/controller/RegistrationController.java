@@ -35,18 +35,18 @@ public class RegistrationController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/registration")
     public String addUser(
-                          @RequestParam("password2") String passwordConformition,
+                          @RequestParam("password2") String passwordConfirmation,
                           @Valid User user,
                           BindingResult bindingResult,
                           Model model
     ) {
 
-        boolean isConfirmEmpty = StringUtils.isEmpty(passwordConformition);
+        boolean isConfirmEmpty = StringUtils.isEmpty(passwordConfirmation);
         if (isConfirmEmpty) {
             model.addAttribute("password2Error", "Password confirmation can not be empty");
         }
 
-        if (user.getPassword() != null && !user.getPassword().equals(passwordConformition)) {
+        if (user.getPassword() != null && !user.getPassword().equals(passwordConfirmation)) {
             model.addAttribute("passwordError", "Passwords are different");
         }
 

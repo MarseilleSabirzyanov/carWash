@@ -10,9 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import ru.sabirzyanov.springtest.domain.User;
-import ru.sabirzyanov.springtest.repos.UserRepository;
+import ru.sabirzyanov.springtest.service.UserService;
 
 import java.util.Map;
 
@@ -22,15 +21,13 @@ import java.util.Map;
 public class LoginController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @GetMapping("/login")
     public String login() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (!(auth instanceof AnonymousAuthenticationToken)) {
-
-            /* The user is logged in :) */
             return "user/profile";
         }
 
@@ -42,7 +39,7 @@ public class LoginController {
                             BindingResult bindingResult,
                             Model model) {
 
-        User user = userRepository.findByUsername(username);
+        User user = userService.findUser(username);
         if (user.getActivationCode() != null) {
             model.addAttribute("errorMessage", "Email not activated");
             return "login";
@@ -56,7 +53,7 @@ public class LoginController {
             return "login";
         }
 
-        return "redirect:/main";
+        return "redirect:/user/profile";
     }
 
 }

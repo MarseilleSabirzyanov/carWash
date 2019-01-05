@@ -115,8 +115,15 @@ public class UserService implements UserDetailsService {
 
             String oldUsername = user.getUsername();
 
+            //TODO activation code при смене email
             user.setUsername(username);
-            user.setEmail(email);
+
+            if (!email.equals(user.getEmail())) {
+                user.setEmail(email);
+                user.setActivationCode(UUID.randomUUID().toString());
+                sendMessage(user);
+            }
+
             user.setScore(score);
 
             Set<String> roles = Arrays.stream(Role.values())
@@ -136,6 +143,7 @@ public class UserService implements UserDetailsService {
             Date date = new Date();
             History history = new History(date, score, user, admin);
 
+            //TODO начисление баллов(процент от чека) и списание баллов
             if (!oldUsername.equals(username) && !score.equals(oldScore)) {
                 if ((score - oldScore) > 0) {
                     history.setOp("+" + (score - oldScore) + ", username was changed from " + oldUsername + " to " + username);

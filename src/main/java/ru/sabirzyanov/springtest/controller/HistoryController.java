@@ -103,7 +103,7 @@ public class HistoryController {
                 page = historyService.findDate(dateFrom, dateTo, pageable);
                 model.addAttribute("page", page);
             } else {
-                page = historyService.findAdminDate(userService.findUser(username).getId(), dateFrom, dateTo, pageable);
+                page = historyService.findAdminDate(userService.findUser(admin).getId(), dateFrom, dateTo, pageable);
                 model.addAttribute("page", page);
             }
         }
