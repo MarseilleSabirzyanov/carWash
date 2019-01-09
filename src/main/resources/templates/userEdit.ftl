@@ -6,7 +6,7 @@
         ${errorMessage!}
         </div>
     </#if>
-    <form action="/user" method="post" xmlns="http://www.w3.org/1999/html">
+    <form action="/user/${user.id}" method="post" name="save" xmlns="http://www.w3.org/1999/html">
         <div class="form-group">
             <label for="inputUsername">Username</label>
             <input type="text" name="username" value="${user.username}" class="form-control ${(usernameError??)?string('is-invalid', '')}" id="inputUsername" placeholder="Email">
@@ -19,10 +19,6 @@
         <div class="form-group">
             <label for="inputEmail4">Email</label>
             <input type="email" name="email" value="${user.email}" class="form-control" id="inputEmail4" placeholder="Email">
-        </div>
-        <div class="form-group">
-            <label for="inputScore">Score</label>
-            <input type="text" name="score" value="${user.score}" class="form-control" id="inputScore" placeholder="Email">
         </div>
         <fieldset class="form-group">
             <div class="row">
@@ -41,7 +37,16 @@
         <input type="hidden" value="${_csrf.token}" name="_csrf">
         <div class="form-group row">
             <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary" name="save" value="save">Save</button>
+            </div>
+        </div>
+        <input type="hidden" value="${user.id}" name="userId">
+        <div class="form-group">
+            <label for="inputScore">Score: ${user.score}</label>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-10">
+                <button <#if 500 gte user.getScore()>disabled</#if> type="submit" class="btn btn-primary" name="activatePoints" value="activatePoints">Use points</button>
             </div>
         </div>
     </form>

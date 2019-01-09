@@ -4,12 +4,7 @@
 <@c.page>
     <#if Session?? && Session.SPRING_SECURITY_LAST_EXCEPTION??>
         <div class="alert alert-danger" role="alert">
-            ${SPRING_SECURITY_LAST_EXCEPTION.message}
-        </div>
-    </#if>
-    <#if errorMessage??>
-        <div class="alert alert-danger" role="alert">
-        ${errorMessage!}
+            Username or password is incorrect or email not activated!
         </div>
     </#if>
     <@l.login "/login" false/>

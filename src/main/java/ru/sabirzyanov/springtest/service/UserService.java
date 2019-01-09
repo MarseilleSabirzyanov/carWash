@@ -40,8 +40,8 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
 
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
+        if (user.getActivationCode() != null ) {
+            throw new UsernameNotFoundException("email is not activated");
         }
 
         return user;
@@ -106,16 +106,11 @@ public class UserService implements UserDetailsService {
     public void saveUser(User user,
                          String username,
                          String email,
-                         Long score,
                          User admin,
                          Map<String, String> form
     ) {
-
-            long oldScore = user.getScore();
-
             String oldUsername = user.getUsername();
 
-            //TODO activation code при смене email
             user.setUsername(username);
 
             if (!email.equals(user.getEmail())) {
@@ -123,8 +118,6 @@ public class UserService implements UserDetailsService {
                 user.setActivationCode(UUID.randomUUID().toString());
                 sendMessage(user);
             }
-
-            user.setScore(score);
 
             Set<String> roles = Arrays.stream(Role.values())
                     .map(Role::name)
@@ -140,28 +133,14 @@ public class UserService implements UserDetailsService {
 
             userRepository.save(user);
 
-            Date date = new Date();
-            History history = new History(date, score, user, admin);
+            //TODO выбор скидки
+            if (!oldUsername.equals(username)) {
+                Date date = new Date();
+                History history = new History(date, user.getScore(), user, admin);
+                history.setOp("Username was changed from " + oldUsername + " to " + username);
+                historyRepository.save(history);
+            }
 
-            //TODO начисление баллов(процент от чека) и списание баллов
-            if (!oldUsername.equals(username) && !score.equals(oldScore)) {
-                if ((score - oldScore) > 0) {
-                    history.setOp("+" + (score - oldScore) + ", username was changed from " + oldUsername + " to " + username);
-                } else {
-                    history.setOp("-" + (oldScore - score + ", username was changed from " + oldUsername + " to " + username));
-                }
-            }
-            else if (!oldUsername.equals(username)) {
-             history.setOp("Total didn't changed, username was changed from " + oldUsername + " to " + username);
-            }
-            else if (!score.equals(oldScore)) {
-                if ((score - oldScore) > 0) {
-                    history.setOp("+" + (score - oldScore));
-                } else {
-                    history.setOp("-" + (oldScore - score));
-                }
-            } else history.setOp("Total didn't changed!");
-            historyRepository.save(history);
     }
 
     public void updateProfile(User user, String password, String email) {
@@ -190,4 +169,29 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public void addPoints(String username, Long points, User admin) {
+        if (points > 0) {
+            Long oldScore;
+            oldScore = userRepository.findByUsername(username).getScore();
+            userRepository.findByUsername(username).setScore(points*20/100 + oldScore); //20% sale
+            userRepository.save(userRepository.findByUsername(username));
+
+            Date date = new Date();
+            History history = new History(date, userRepository.findByUsername(username).getScore(), userRepository.findByUsername(username), admin);
+            history.setOp("+" + (points*20/100));
+            historyRepository.save(history);
+        }
+    }
+
+    public void activatePoints(User user, User admin) {
+        if (user.getScore() >= 500) {
+            user.setScore(user.getScore()-500);
+            userRepository.save(user);
+
+            Date date = new Date();
+            History history = new History(date, user.getScore(), user, admin);
+            history.setOp("-" + 500);
+            historyRepository.save(history);
+        }
+    }
 }

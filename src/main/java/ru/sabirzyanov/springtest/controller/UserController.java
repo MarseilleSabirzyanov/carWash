@@ -77,22 +77,56 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
+    public String addPoints(@AuthenticationPrincipal User admin,
+                            Model model,
+                            @RequestParam String usernamePost,
+                            @RequestParam Long points
+                            ) {
+        //TODO ошибка на отрицательное число
+
+        if (points < 0) {
+            model.addAttribute("errorMessage", "point can't be negative!");
+            return "redirect:/user";
+        }
+        userService.addPoints(usernamePost, points, admin);
+
+        return "redirect:/user";
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping(value = "{user}", params = "save")
     public String userSave(
             @AuthenticationPrincipal User admin,
             Model model,
             @RequestParam String username,
             @RequestParam String email,
-            @RequestParam Long score,
             @RequestParam Map<String, String> form,
             @PathVariable @RequestParam("userId") User user
     ) {
 
         if (userService.findUser(username) == null || user.getUsername().equals(username)) {
-            userService.saveUser(user, username, email, score, admin, form);
+            userService.saveUser(user, username, email, admin, form);
         }
         else
             //TODO вывод ошибки о том, что такой юзер существует
             model.addAttribute("errorMessage", "A user with same username already exist");
+        return "redirect:/user";
+    }
+
+
+    /*
+    *  500 баллов = 1 услуга
+    * */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping(value = "{user}", params = "activatePoints")
+    public String activatePoints(
+            @AuthenticationPrincipal User admin,
+            Model model,
+            @PathVariable @RequestParam("userId") User user
+    ) {
+        userService.activatePoints(user, admin);
+
+
         return "redirect:/user";
     }
 

@@ -31,14 +31,15 @@ public class LoginController {
             return "user/profile";
         }
 
+
         return "login";
     }
 
     @PostMapping("/login")
     public String loginUser(@RequestParam String username,
                             BindingResult bindingResult,
-                            Model model) {
-
+                            Model model
+    ) {
         User user = userService.findUser(username);
         if (user.getActivationCode() != null) {
             model.addAttribute("errorMessage", "Email not activated");
@@ -52,7 +53,6 @@ public class LoginController {
 
             return "login";
         }
-
         return "redirect:/user/profile";
     }
 

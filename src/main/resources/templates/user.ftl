@@ -24,6 +24,8 @@
         <tr>
             <th scope="col">Name</th>
             <th scope="col">Role</th>
+            <th scope="col">Total points</th>
+            <th scope="col">Add points</th>
             <th></th>
         </tr>
         </thead>
@@ -31,9 +33,22 @@
         <tbody>
             <#list page.content as user>
                 <tr>
-                <td>${user.username}</td>
-                <td><#list user.roles as role>${role}<#sep>, </#list></td>
-                <td><a href="/user/${user.id}">edit</a></td>
+                    <td>${user.username}</td>
+                    <td><#list user.roles as role>${role}<#sep>, </#list></td>
+                    <td>${user.score}</td>
+                    <td>
+                    <form method="post" action="/user" class="form-inline">
+                        <div class="row">
+                            <div class="col-xs-2">
+                                <input type="number" name="points" class="form-control" value="0" placeholder="${user.score}">
+                                <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                                <input type="hidden" name="usernamePost" value="${user.getUsername()}" placeholder="${user.getUsername()}">
+                                <button type="submit" class="btn btn-primary ml-2">Add points</button>
+                            </div>
+                        </div>
+                    </form>
+                    </td>
+                    <td><a href="/user/${user.id}">edit</a></td>
                 </tr>
             </#list>
         </tbody>
@@ -44,6 +59,19 @@
                 <tr>
                 <td>${user.username}</td>
                 <td><#list user.roles as role>${role}<#sep>, </#list></td>
+                <td>${user.score}</td>
+                <td>
+                    <form method="post" action="/user" class="form-inline">
+                        <div class="row">
+                            <div class="col-xs-2">
+                                <input type="number" name="points" class="form-control" value="0" placeholder="${user.score}">
+                                <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                                <input type="hidden" name="usernamePost" value="${user.getUsername()}" placeholder="${user.getUsername()}">
+                                <button type="submit" class="btn btn-primary ml-2">Add points</button>
+                            </div>
+                        </div>
+                    </form>
+                </td>
                 <td><a href="/user/${user.id}">edit</a></td>
                 </tr>
             </#list>
