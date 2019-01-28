@@ -41,6 +41,11 @@
                         <div class="row">
                             <div class="col-xs-2">
                                 <input type="number" name="points" class="form-control" value="0" placeholder="${user.score}">
+                                <select class="custom-select">
+                                    <option value="1">10</option>
+                                    <option value="2">20</option>
+                                    <option value="3">30</option>
+                                </select>
                                 <input type="hidden" name="_csrf" value="${_csrf.token}" />
                                 <input type="hidden" name="usernamePost" value="${user.getUsername()}" placeholder="${user.getUsername()}">
                                 <button type="submit" class="btn btn-primary ml-2">Add points</button>
@@ -60,18 +65,25 @@
                 <td>${user.username}</td>
                 <td><#list user.roles as role>${role}<#sep>, </#list></td>
                 <td>${user.score}</td>
-                <td>
-                    <form method="post" action="/user" class="form-inline">
+                <form method="post" action="/user" class="form-inline">
+                    <td>
                         <div class="row">
-                            <div class="col-xs-2">
-                                <input type="number" name="points" class="form-control" value="0" placeholder="${user.score}">
-                                <input type="hidden" name="_csrf" value="${_csrf.token}" />
-                                <input type="hidden" name="usernamePost" value="${user.getUsername()}" placeholder="${user.getUsername()}">
-                                <button type="submit" class="btn btn-primary ml-2">Add points</button>
+                                <div class="col-xs-2">
+                                    <input type="number" name="points" class="form-control" value="0" placeholder="${user.score}">
+                                    <div class="form-group">
+                                        <select name="discount" class="custom-select">
+                                            <option name="discount" value="one">10</option>
+                                            <option name="discount" value="two">20</option>
+                                            <option name="discount" value="three">30</option>
+                                        </select>
+                                    </div>
+                                    <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                                    <input type="hidden" name="usernamePost" value="${user.getUsername()}" placeholder="${user.getUsername()}">
+                                    <button type="submit" class="btn btn-primary ml-2">Add points</button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                </td>
+                    </td>
+                </form>
                 <td><a href="/user/${user.id}">edit</a></td>
                 </tr>
             </#list>

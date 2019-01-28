@@ -80,7 +80,8 @@ public class UserController {
     public String addPoints(@AuthenticationPrincipal User admin,
                             Model model,
                             @RequestParam String usernamePost,
-                            @RequestParam Long points
+                            @RequestParam Long points,
+                            @RequestParam(value="discount") Long discount
                             ) {
         //TODO ошибка на отрицательное число
 
@@ -88,7 +89,7 @@ public class UserController {
             model.addAttribute("errorMessage", "point can't be negative!");
             return "redirect:/user";
         }
-        userService.addPoints(usernamePost, points, admin);
+        //userService.addPoints(usernamePost, discount, points, admin);
 
         return "redirect:/user";
     }

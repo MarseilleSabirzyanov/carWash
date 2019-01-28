@@ -169,16 +169,16 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public void addPoints(String username, Long points, User admin) {
+    public void addPoints(String username, Long discount, Long points, User admin) {
         if (points > 0) {
             Long oldScore;
             oldScore = userRepository.findByUsername(username).getScore();
-            userRepository.findByUsername(username).setScore(points*20/100 + oldScore); //20% sale
+            userRepository.findByUsername(username).setScore(points*discount/100 + oldScore); //20% sale
             userRepository.save(userRepository.findByUsername(username));
 
             Date date = new Date();
             History history = new History(date, userRepository.findByUsername(username).getScore(), userRepository.findByUsername(username), admin);
-            history.setOp("+" + (points*20/100));
+            history.setOp("+" + (points*discount/100));
             historyRepository.save(history);
         }
     }
