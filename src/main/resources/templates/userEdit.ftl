@@ -18,7 +18,12 @@
         </div>
         <div class="form-group">
             <label for="inputEmail4">Email</label>
-            <input type="email" name="email" value="${user.email}" class="form-control" id="inputEmail4" placeholder="Email">
+            <input type="email" name="email" value="${user.email}" class="form-control ${(emailError??)?string('is-invalid', '')}" id="inputEmail4" placeholder="Email">
+            <#if emailError??>
+                <div class="invalid-feedback">
+                ${emailError}
+                </div>
+            </#if>
         </div>
         <fieldset class="form-group">
             <div class="row">

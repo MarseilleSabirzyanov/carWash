@@ -11,7 +11,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.sabirzyanov.springtest.domain.History;
@@ -22,9 +21,7 @@ import ru.sabirzyanov.springtest.service.UserService;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 
@@ -44,25 +41,7 @@ public class UserController {
                                                                               Model model,
                            @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        /*Page<User> page;
-        if (username != null && !username.isEmpty()) {
-            List<User> userList = new ArrayList<>();
-            if (userService.findUser(username) != null ) {
-                userList.add(userService.findUser(username));
-                model.addAttribute("usersList", userList);
-            }
-            else {
-                page = userService.findAll(pageable);
-                model.addAttribute("errorMessage", "User not found");
-                model.addAttribute("page", page);
-            }
-        } else {
-            page = userService.findAll(pageable);
-            model.addAttribute("page", page);
-        }
 
-        model.addAttribute("username", username);
-        model.addAttribute("url", "/user");*/
         userService.userListCreator(model, pageable, username);
 
         return "user";
@@ -119,13 +98,22 @@ public class UserController {
             @RequestParam Map<String, String> form,
             @PathVariable @RequestParam("userId") User user
     ) {
+        model.addAttribute("user", user);
+        model.addAttribute("roles", Role.values());
 
         if (userService.findUser(username) == null || user.getUsername().equals(username)) {
-            userService.saveUser(user, username, email, admin, form);
+            if (userService.findUserByEmail(email) == null)
+                userService.saveUser(user, username, email, admin, form);
+            else {
+                model.addAttribute("emailError", "A user with same email already exist");
+                return "userEdit";
+            }
         }
-        else
+        else {
             //TODO вывод ошибки о том, что такой юзер существует
-            model.addAttribute("errorMessage", "A user with same username already exist");
+            model.addAttribute("usernameError", "A user with same username already exist");
+            return "userEdit";
+        }
         return "redirect:/user";
     }
 
@@ -143,7 +131,7 @@ public class UserController {
         userService.activatePoints(user, admin);
 
 
-        return "redirect:/user";
+        return "redirect:/user/" + user.getId();
     }
 
     @InitBinder

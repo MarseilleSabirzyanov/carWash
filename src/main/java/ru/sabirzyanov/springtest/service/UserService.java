@@ -134,7 +134,7 @@ public class UserService implements UserDetailsService {
 
             userRepository.save(user);
 
-            //TODO выбор скидки
+
             if (!oldUsername.equals(username)) {
                 Date date = new Date();
                 History history = new History(date, user.getScore(), user, admin);
@@ -216,5 +216,9 @@ public class UserService implements UserDetailsService {
             history.setOp("-" + 500);
             historyRepository.save(history);
         }
+    }
+
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }
