@@ -34,7 +34,7 @@ public class User implements UserDetails {
     private String name = "";
 
     @Email(message = "Email is not correct")
-    @NotBlank(message = "Username cannot be empty")
+    @NotBlank(message = "Email cannot be empty")
     private String email = "";
     private Long score = 0L;
     private boolean active;

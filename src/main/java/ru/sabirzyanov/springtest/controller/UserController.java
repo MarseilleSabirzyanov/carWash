@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.sabirzyanov.springtest.domain.History;
@@ -43,7 +44,7 @@ public class UserController {
                                                                               Model model,
                            @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        Page<User> page;
+        /*Page<User> page;
         if (username != null && !username.isEmpty()) {
             List<User> userList = new ArrayList<>();
             if (userService.findUser(username) != null ) {
@@ -61,7 +62,8 @@ public class UserController {
         }
 
         model.addAttribute("username", username);
-        model.addAttribute("url", "/user");
+        model.addAttribute("url", "/user");*/
+        userService.userListCreator(model, pageable, username);
 
         return "user";
     }
@@ -80,18 +82,31 @@ public class UserController {
     public String addPoints(@AuthenticationPrincipal User admin,
                             Model model,
                             @RequestParam String usernamePost,
+                            @RequestParam Long discount,
                             @RequestParam Long points,
-                            @RequestParam(value="discount") Long discount
+                            @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable
                             ) {
-        //TODO ошибка на отрицательное число
 
-        if (points < 0) {
-            model.addAttribute("errorMessage", "point can't be negative!");
-            return "redirect:/user";
+        userService.userListCreator(model, pageable, usernamePost);
+        model.addAttribute("pointErrorUsername", usernamePost);
+
+        if (points < 0 && (discount < 0 || discount > 100)) {
+            model.addAttribute("pointsError", "Point can't be negative!");
+            model.addAttribute("discountError", "From 0 to 100");
+        } else if (points < 0){
+            model.addAttribute("pointsError", "Point can't be negative!");
+        } else if (discount < 0 || discount > 100) {
+            model.addAttribute("discountError", "From 0 to 100");
+        } else {
+            userService.addPoints(usernamePost, discount, points, admin);
+            return "redirect:user";
         }
-        //userService.addPoints(usernamePost, discount, points, admin);
 
-        return "redirect:/user";
+        /*List<User> userList = new ArrayList<>();
+        userList.add(userService.findUser(usernamePost));
+        model.addAttribute("usersList", userList);*/
+
+        return "user";
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

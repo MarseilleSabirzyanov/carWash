@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import ru.sabirzyanov.springtest.domain.History;
 import ru.sabirzyanov.springtest.domain.Role;
@@ -141,6 +142,28 @@ public class UserService implements UserDetailsService {
                 historyRepository.save(history);
             }
 
+    }
+
+    public void userListCreator(Model model, Pageable pageable, String username) {
+        Page<User> page;
+        if (username != null && !username.isEmpty()) {
+            if (findUser(username) != null ) {
+                List<User> userList = new ArrayList<>();
+                userList.add(findUser(username));
+                model.addAttribute("usersList", userList);
+            }
+            else {
+                page = findAll(pageable);
+                model.addAttribute("errorMessage", "User not found");
+                model.addAttribute("page", page);
+            }
+        } else {
+            page = findAll(pageable);
+            model.addAttribute("page", page);
+        }
+
+        model.addAttribute("username", username);
+        model.addAttribute("url", "/user");
     }
 
     public void updateProfile(User user, String password, String email) {
