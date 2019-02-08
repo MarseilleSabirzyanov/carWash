@@ -188,22 +188,24 @@ public class UserService implements UserDetailsService {
         model.addAttribute("url", "/user");
     }
 
-    public void updateProfile(User user, String password, String email) {
+    public void updateProfile(User user, String password, String email, Model model) {
+
         String userEmail = user.getEmail();
 
-        boolean isEmailChanged = (email != null && !email.equals(userEmail)) ||
+        boolean isEmailChanged = (email != null && !email.isEmpty() && !email.equals(userEmail)) ||
                 (userEmail != null && !userEmail.equals(email));
 
         if (isEmailChanged) {
             user.setEmail(email);
+            model.addAttribute("emailSuccess", "Email successfully updated");
 
             if (!StringUtils.isEmpty(email)) {
                 user.setActivationCode(UUID.randomUUID().toString());
             }
         }
-
-        if (!StringUtils.isEmpty(password)) {
-            user.setPassword(passwordEncoder.encode(password));
+        if (!password.equals("")) {
+            user.setPassword(encodedPassword(password));
+            model.addAttribute("passwordSuccess", "Password successfully updated");
         }
 
         //TODO успешно сохранено

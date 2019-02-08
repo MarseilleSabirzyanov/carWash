@@ -19,7 +19,7 @@ public class MainController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (!(auth instanceof AnonymousAuthenticationToken)) {
-            return "user/profile";
+            return "redirect:user/profile";
         }
 
         return "login";

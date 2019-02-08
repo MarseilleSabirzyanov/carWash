@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.sabirzyanov.springtest.domain.History;
@@ -23,7 +24,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-
+import java.util.UUID;
 
 
 @Controller
@@ -124,7 +125,6 @@ public class UserController {
     @PostMapping(value = "{user}", params = "activatePoints")
     public String activatePoints(
             @AuthenticationPrincipal User admin,
-            Model model,
             @PathVariable @RequestParam("userId") User user
     ) {
         userService.activatePoints(user, admin);
@@ -162,6 +162,7 @@ public class UserController {
 
         model.addAttribute("username", user.getUsername());
         model.addAttribute("email", user.getEmail());
+        model.addAttribute("score", user.getScore());
         model.addAttribute("page", page);
 
         return "profile";
@@ -170,11 +171,38 @@ public class UserController {
     @PostMapping("profile")
     public String updateProfile(
             @AuthenticationPrincipal User user,
+            Model model,
+            @RequestParam("password2") String passwordConfirmation,
             @RequestParam String password,
-            @RequestParam String email
+            @RequestParam String email,
+            @RequestParam(required = false, defaultValue = "2000-01-01") @DateTimeFormat(pattern="yyyy-MM-dd") Date dateFrom,
+            @RequestParam(required = false, defaultValue = "today") @DateTimeFormat(pattern="yyyy-MM-dd") Date dateTo,
+            Pageable pageable
     ) {
-        userService.updateProfile(user, password, email);
+        Page<History> page;
+        page = historyService.findUserDate(user.getId(), dateFrom, dateTo, pageable);
 
-        return "redirect:/user/profile";
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("email", user.getEmail());
+        model.addAttribute("score", user.getScore());
+        model.addAttribute("page", page);
+
+        if (StringUtils.isEmpty(password) && StringUtils.isEmpty(passwordConfirmation))
+            userService.updateProfile(user, "", email, model);
+        else if (!StringUtils.isEmpty(password)) {
+            boolean isConfirmEmpty = StringUtils.isEmpty(passwordConfirmation);
+            if (isConfirmEmpty) {
+                model.addAttribute("password2Error", "Password confirmation can not be empty");
+                return "profile";
+            }
+
+            if (!password.equals(passwordConfirmation)) {
+                model.addAttribute("passwordError", "Passwords are different");
+                return "profile";
+            }
+            userService.updateProfile(user, password, email, model);
+        }
+
+        return "profile";
     }
 }

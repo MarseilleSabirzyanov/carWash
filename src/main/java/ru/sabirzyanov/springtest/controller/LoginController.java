@@ -30,7 +30,7 @@ public class LoginController {
                 .getAuthentication();
 
         if (!(auth instanceof AnonymousAuthenticationToken)) {
-            return "user/profile";
+            return "redirect:user/profile";
         }
 
         return "login";
