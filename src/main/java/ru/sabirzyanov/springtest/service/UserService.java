@@ -1,5 +1,6 @@
 package ru.sabirzyanov.springtest.service;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,6 +49,10 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    public String encodedPassword(String password) {
+        return passwordEncoder.encode(password);
+    }
+
     public boolean addUser(User user) {
         User userFromDb = userRepository.findByUsername(user.getUsername());
 
@@ -58,20 +63,37 @@ public class UserService implements UserDetailsService {
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(RandomStringUtils.randomAlphanumeric(6));
+        sendMessage(user, user.getPassword());
+        user.setPassword(encodedPassword(user.getPassword()));
 
         userRepository.save(user);
 
-        sendMessage(user);
+        //sendMessage(user);
 
         return true;
+    }
+
+    private void sendMessage(User user, String password) {
+        if (!StringUtils.isEmpty(user.getEmail())) {
+            String message = String.format(
+              "Hello, %s! \n" +
+                      "Welcome. Please visit this link for the activation your account: http://localhost:8080/activate/%s " +
+                    "This is your password: %s",
+                    user.getUsername(),
+                    user.getActivationCode(),
+                    password
+            );
+
+            mailSender.send(user.getEmail(), "Activation code", message);
+        }
     }
 
     private void sendMessage(User user) {
         if (!StringUtils.isEmpty(user.getEmail())) {
             String message = String.format(
-              "Hello, %s! \n" +
-                      "Welcome. Please visit this link for the activation your account: http://localhost:8080/activate/%s",
+                    "Hello, %s! \n" +
+                            "Welcome. Please visit this link for the activation your account: http://localhost:8080/activate/%s",
                     user.getUsername(),
                     user.getActivationCode()
             );
@@ -184,13 +206,14 @@ public class UserService implements UserDetailsService {
             user.setPassword(passwordEncoder.encode(password));
         }
 
+        //TODO успешно сохранено
+
         userRepository.save(user);
 
         if (isEmailChanged) {
             sendMessage(user);
         }
     }
-
 
     public void addPoints(String username, Long discount, Long points, User admin) {
         if (points > 0) {

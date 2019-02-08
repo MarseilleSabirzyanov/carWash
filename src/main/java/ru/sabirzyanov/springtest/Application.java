@@ -5,9 +5,7 @@ package ru.sabirzyanov.springtest;
  */
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
-//TODO рандомный пароль на почту из 5 символов
 //TODO изменение данных юзера
 //TODO поменять id пользователя на число из 9 цифр
 

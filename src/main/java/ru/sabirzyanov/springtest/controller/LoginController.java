@@ -25,24 +25,35 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Authentication auth = SecurityContextHolder
+                .getContext()
+                .getAuthentication();
 
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             return "user/profile";
         }
-
 
         return "login";
     }
 
     @PostMapping("/login")
     public String loginUser(@RequestParam String username,
+                            @RequestParam String password,
                             BindingResult bindingResult,
                             Model model
     ) {
         User user = userService.findUser(username);
+
+        if (user == null) {
+            model.addAttribute("loginError", "login or password is incorrect");
+            return "login";
+        } else if(!user.getPassword().equals(userService.encodedPassword(password))) {
+            model.addAttribute("loginError", "login or password is incorrect");
+            return "login";
+        }
+
         if (user.getActivationCode() != null) {
-            model.addAttribute("errorMessage", "Email not activated");
+            model.addAttribute("activationCodeError", "Email not activated");
             return "login";
         }
 

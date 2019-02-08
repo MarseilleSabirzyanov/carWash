@@ -110,7 +110,6 @@ public class UserController {
             }
         }
         else {
-            //TODO вывод ошибки о том, что такой юзер существует
             model.addAttribute("usernameError", "A user with same username already exist");
             return "userEdit";
         }
