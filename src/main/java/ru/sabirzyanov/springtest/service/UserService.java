@@ -53,10 +53,17 @@ public class UserService implements UserDetailsService {
         return passwordEncoder.encode(password);
     }
 
-    public boolean addUser(User user) {
+    public boolean addUser(User user, Model model) {
         User userFromDb = userRepository.findByUsername(user.getUsername());
+        User userEmail = userRepository.findByEmail(user.getEmail());
 
         if (userFromDb != null) {
+            model.addAttribute("usernameError", "User exists");
+            return false;
+        }
+
+        if (userEmail != null) {
+            model.addAttribute("emailError", "Email exists");
             return false;
         }
 
@@ -139,7 +146,9 @@ public class UserService implements UserDetailsService {
             if (!email.equals(user.getEmail())) {
                 user.setEmail(email);
                 user.setActivationCode(UUID.randomUUID().toString());
-                sendMessage(user);
+                user.setPassword(RandomStringUtils.randomAlphanumeric(6));
+                sendMessage(user, user.getPassword());
+                user.setPassword(encodedPassword(user.getPassword()));
             }
 
             Set<String> roles = Arrays.stream(Role.values())

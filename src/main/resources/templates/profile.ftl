@@ -39,7 +39,12 @@
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">Email:</label>
         <div class="col-sm-6">
-            <input type="email" name="email" class="form-control ${(emailSuccess??)?string('is-valid', '')}" placeholder="some@some.com" value="${email}"/>
+            <input type="email" name="email" class="form-control ${(emailSuccess??)?string('is-valid', '')} ${(emailError??)?string('is-invalid', '')}" placeholder="some@some.com" value="${email}"/>
+            <#if emailError??>
+                <div class="invalid-feedback">
+                ${emailError}
+                </div>
+            </#if>
             <#if emailSuccess??>
                 <div class="valid-feedback">
                     ${emailSuccess}

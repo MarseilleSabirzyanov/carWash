@@ -24,7 +24,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
-import java.util.UUID;
 
 
 @Controller
@@ -99,12 +98,15 @@ public class UserController {
             @RequestParam Map<String, String> form,
             @PathVariable @RequestParam("userId") User user
     ) {
+        //TODO доработать профиль юзера в админке
         model.addAttribute("user", user);
         model.addAttribute("roles", Role.values());
 
         if (userService.findUser(username) == null || user.getUsername().equals(username)) {
             if (userService.findUserByEmail(email) == null)
                 userService.saveUser(user, username, email, admin, form);
+            else if (userService.findUserByEmail(email).getEmail().equals(user.getEmail()))
+                return "userEdit";
             else {
                 model.addAttribute("emailError", "A user with same email already exist");
                 return "userEdit";
@@ -187,6 +189,11 @@ public class UserController {
         model.addAttribute("score", user.getScore());
         model.addAttribute("page", page);
 
+        if (userService.findUserByEmail(email) != null && !email.equals(user.getEmail())) {
+            model.addAttribute("email", email);
+            model.addAttribute("emailError", "Email exist");
+            return "profile";
+        }
         if (StringUtils.isEmpty(password) && StringUtils.isEmpty(passwordConfirmation))
             userService.updateProfile(user, "", email, model);
         else if (!StringUtils.isEmpty(password)) {

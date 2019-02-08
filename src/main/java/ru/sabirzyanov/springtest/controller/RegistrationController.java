@@ -59,12 +59,13 @@ public class RegistrationController {
             return "registration";
         }
 
-        if (!userService.addUser(user)) {
-            model.addAttribute("usernameError", "User exists");
+        if (!userService.addUser(user, model)) {
             return "registration";
         }
 
-        return "redirect:registration";
+        model.addAttribute("registrationSuccess", "User successfully registered!");
+
+        return "registration";
     }
 
     @GetMapping("/activate/{code}")
