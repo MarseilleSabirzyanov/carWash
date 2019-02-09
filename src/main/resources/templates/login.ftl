@@ -7,7 +7,7 @@
             Username or password is incorrect or email not activated!
         </div>
     </#if>-->
-    <#if passwordError??>
+    <#--<#if passwordError??>
         <div class="invalid-feedback">
         ${passwordError}
         </div>
@@ -21,6 +21,9 @@
         <div class="invalid-feedback">
         ${loginError}
         </div>
-    </#if>
+    </#if>-->
     <@l.login "/login" false/>
+    <div class="mt-2">
+        <td><a href="/restore_account">Forgot password</a></td>
+    </div>
 </@c.page>

@@ -109,6 +109,19 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    private void sendMessage(String email, String password) {
+        if (!StringUtils.isEmpty(findUserByEmail(email).getEmail())) {
+            String message = String.format(
+                    "Hello, %s! \n" +
+                            "This is your new password: %s",
+                    findUserByEmail(email).getUsername(),
+                    password
+            );
+
+            mailSender.send(email, "Restore password", message);
+        }
+    }
+
     public boolean activateUser(String code) {
         User user = userRepository.findByActivationCode(code);
 
@@ -258,5 +271,19 @@ public class UserService implements UserDetailsService {
 
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public void restoreAccount(String email, Model model) {
+        if (findUserByEmail(email) != null) {
+            User user = findUserByEmail(email);
+            user.setPassword(RandomStringUtils.randomAlphanumeric(6));
+            sendMessage(email, user.getPassword());
+            user.setPassword(encodedPassword(user.getPassword()));
+            model.addAttribute("emailSuccess", "New password sent to email");
+
+            userRepository.save(user);
+        } else {
+            model.addAttribute("emailError", "Email not founded");
+        }
     }
 }
