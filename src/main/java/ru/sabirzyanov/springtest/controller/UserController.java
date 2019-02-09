@@ -52,6 +52,8 @@ public class UserController {
     public String userEditForm(@PathVariable User user, Model model) {
         model.addAttribute("user", user);
         model.addAttribute("roles", Role.values());
+        model.addAttribute("oldUsername", user.getUsername());
+        model.addAttribute("oldEmail", user.getEmail());
 
         return "userEdit";
     }
@@ -98,15 +100,15 @@ public class UserController {
             @RequestParam Map<String, String> form,
             @PathVariable @RequestParam("userId") User user
     ) {
-        //TODO доработать профиль юзера в админке
         model.addAttribute("user", user);
         model.addAttribute("roles", Role.values());
+        model.addAttribute("oldUsername", username);
+        model.addAttribute("oldEmail", email);
 
         if (userService.findUser(username) == null || user.getUsername().equals(username)) {
-            if (userService.findUserByEmail(email) == null)
-                userService.saveUser(user, username, email, admin, form);
-            else if (userService.findUserByEmail(email).getEmail().equals(user.getEmail()))
-                return "userEdit";
+            if (userService.findUserByEmail(email) == null || user.getEmail().equals(email)) {
+                userService.saveUser(user, username, email, admin, form, model);
+            }
             else {
                 model.addAttribute("emailError", "A user with same email already exist");
                 return "userEdit";
@@ -116,7 +118,8 @@ public class UserController {
             model.addAttribute("usernameError", "A user with same username already exist");
             return "userEdit";
         }
-        return "redirect:/user";
+
+        return "userEdit";
     }
 
 

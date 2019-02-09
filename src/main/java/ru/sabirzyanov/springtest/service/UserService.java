@@ -137,11 +137,14 @@ public class UserService implements UserDetailsService {
                          String username,
                          String email,
                          User admin,
-                         Map<String, String> form
+                         Map<String, String> form,
+                         Model model
     ) {
             String oldUsername = user.getUsername();
-
-            user.setUsername(username);
+            if (!username.equals(user.getUsername())) {
+                user.setUsername(username);
+                model.addAttribute("usernameSuccess", "Username successfully changed");
+            }
 
             if (!email.equals(user.getEmail())) {
                 user.setEmail(email);
@@ -149,6 +152,7 @@ public class UserService implements UserDetailsService {
                 user.setPassword(RandomStringUtils.randomAlphanumeric(6));
                 sendMessage(user, user.getPassword());
                 user.setPassword(encodedPassword(user.getPassword()));
+                model.addAttribute("emailSuccess", "Email successfully changed, please activate your email and change password");
             }
 
             Set<String> roles = Arrays.stream(Role.values())

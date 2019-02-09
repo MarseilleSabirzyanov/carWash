@@ -53,8 +53,8 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Total points:</label>
-        <div class="col-sm-6 mt-2">
+        <label class="col-sm-2">Total points:</label>
+        <div class="col-sm-6">
             ${score}
         </div>
     </div>
