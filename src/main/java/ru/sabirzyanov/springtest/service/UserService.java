@@ -234,8 +234,6 @@ public class UserService implements UserDetailsService {
             model.addAttribute("passwordSuccess", "Password successfully updated");
         }
 
-        //TODO успешно сохранено
-
         userRepository.save(user);
 
         if (isEmailChanged) {
@@ -257,8 +255,24 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void activatePoints(User user, User admin) {
-        if (user.getScore() >= 500) {
+    public void activatePoints(User user, User admin, Long activatedPoints, Model model) {
+        if (user.getScore() < activatedPoints) {
+            model.addAttribute("activatedPointsError", "You have no enough points");
+        }
+        else if (activatedPoints < 0) {
+            model.addAttribute("activatedPointsError", "Activated points can't be negative");
+        } else {
+            user.setScore(user.getScore() - activatedPoints);
+            userRepository.save(user);
+
+            Date date = new Date();
+            History history = new History(date, user.getScore(), user, admin);
+            history.setOp("-" + activatedPoints);
+            historyRepository.save(history);
+            model.addAttribute("activatedPointsSuccess", "Points successfully activated");
+        }
+
+        /*if (user.getScore() >= 500) {
             user.setScore(user.getScore()-500);
             userRepository.save(user);
 
@@ -266,7 +280,7 @@ public class UserService implements UserDetailsService {
             History history = new History(date, user.getScore(), user, admin);
             history.setOp("-" + 500);
             historyRepository.save(history);
-        }
+        }*/
     }
 
     public User findUserByEmail(String email) {

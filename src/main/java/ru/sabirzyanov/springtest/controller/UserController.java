@@ -54,6 +54,7 @@ public class UserController {
         model.addAttribute("roles", Role.values());
         model.addAttribute("oldUsername", user.getUsername());
         model.addAttribute("oldEmail", user.getEmail());
+        model.addAttribute("oldActivatedPoints", 0);
 
         return "userEdit";
     }
@@ -98,12 +99,14 @@ public class UserController {
             @RequestParam String username,
             @RequestParam String email,
             @RequestParam Map<String, String> form,
+            @RequestParam Long activatedPoints,
             @PathVariable @RequestParam("userId") User user
     ) {
         model.addAttribute("user", user);
         model.addAttribute("roles", Role.values());
         model.addAttribute("oldUsername", username);
         model.addAttribute("oldEmail", email);
+        model.addAttribute("oldActivatedPoints", activatedPoints);
 
         if (userService.findUser(username) == null || user.getUsername().equals(username)) {
             if (userService.findUserByEmail(email) == null || user.getEmail().equals(email)) {
@@ -130,12 +133,22 @@ public class UserController {
     @PostMapping(value = "{user}", params = "activatePoints")
     public String activatePoints(
             @AuthenticationPrincipal User admin,
-            @PathVariable @RequestParam("userId") User user
+            @PathVariable @RequestParam("userId") User user,
+            @RequestParam Long activatedPoints,
+            Model model
     ) {
-        userService.activatePoints(user, admin);
+        model.addAttribute("user", user);
+        model.addAttribute("roles", Role.values());
+        model.addAttribute("oldUsername", user.getUsername());
+        model.addAttribute("oldEmail", user.getEmail());
+        model.addAttribute("oldActivatedPoints", activatedPoints);
 
-
-        return "redirect:/user/" + user.getId();
+        if (activatedPoints == 0) {
+            return "redirect:/user/" + user.getId();
+        }
+        userService.activatePoints(user, admin, activatedPoints, model);
+        return "userEdit";
+        //return "redirect:/user/" + user.getId();
     }
 
     @InitBinder

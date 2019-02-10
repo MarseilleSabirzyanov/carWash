@@ -57,6 +57,23 @@
                 ${user.score}
             </div>
         </div>
-        <button <#if 500 gte user.getScore()>disabled</#if> type="submit" class="btn btn-primary" name="activatePoints" value="activatePoints">Use points</button>
+
+    <div class="form-group row">
+    <label for="inputActivatePoints" class="col-sm-2 col-form-label">Activate points</label>
+        <div class="col-sm-6">
+            <input type="text" name="activatedPoints" value="${oldActivatedPoints}" class="form-control ${(activatedPointsError??)?string('is-invalid', '')} ${(activatedPointsSuccess??)?string('is-valid', '')}" id="inputActivatePoints" >
+            <#if activatedPointsError??>
+                <div class="invalid-feedback">
+                    ${activatedPointsError}
+                </div>
+            </#if>
+            <#if activatedPointsSuccess??>
+                <div class="valid-feedback">
+                    ${activatedPointsSuccess}
+                </div>
+            </#if>
+        </div>
+    </div>
+        <button type="submit" class="btn btn-primary" name="activatePoints" value="activatePoints">Use points</button>
     </form>
 </@c.page>
