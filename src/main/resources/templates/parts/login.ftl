@@ -14,6 +14,47 @@
             </#if>
         </div>
     </div>
+    <#if isRegisterForm>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Name :</label>
+        <div class="col-sm-6">
+            <input  type="text" name="name" value="<#if user??>${user.name}</#if>"
+            class="form-control ${(nameError?? || loginError??)?string('is-invalid', '')} ${(registrationSuccess??)?string('is-valid', '')}"
+                placeholder="Name" />
+            <#if nameError??>
+                <div class="invalid-feedback">
+                    ${nameError}
+                </div>
+            </#if>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Surname :</label>
+        <div class="col-sm-6">
+            <input  type="text" name="surname" value="<#if user??>${user.surname}</#if>"
+            class="form-control ${(surnameError?? || loginError??)?string('is-invalid', '')} ${(registrationSuccess??)?string('is-valid', '')}"
+                placeholder="Surname" />
+            <#if surnameError??>
+                <div class="invalid-feedback">
+                    ${surnameError}
+                </div>
+            </#if>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label">Phone number :</label>
+        <div class="col-sm-6">
+            <input  type="text" name="phone" value="<#if user??>${user.phone}</#if>"
+                class="form-control ${(phoneError?? || loginError??)?string('is-invalid', '')} ${(registrationSuccess??)?string('is-valid', '')}"
+                placeholder="Phone number" />
+            <#if phoneError??>
+                <div class="invalid-feedback">
+                    ${phoneError}
+                </div>
+            </#if>
+        </div>
+    </div>
+    </#if>
     <#if !isRegisterForm>
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">Password:</label>

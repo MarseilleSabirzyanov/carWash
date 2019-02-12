@@ -1,15 +1,5 @@
 create sequence hibernate_sequence start 1 increment 1;
 
-create table customer (
-    id int8 not null,
-    first_name varchar(255),
-    phone_number varchar(255),
-    points int8,
-    second_name varchar(255),
-    user_id int8,
-    primary key (id)
-);
-
 create table history (
     id int8 not null,
     date timestamp,
@@ -31,6 +21,8 @@ create table usr (
     active boolean not null,
     email varchar(255),
     name varchar(255),
+    surname varchar(255),
+    phone varchar(255),
     password varchar(255) not null,
     score int8,
     username varchar(255) not null,

@@ -22,7 +22,9 @@
         <table class="table">
         <thead class="thead-dark">
             <tr>
+                <th scope="col">Id</th>
                 <th scope="col">Name</th>
+                <th scope="col">Surname</th>
                 <th scope="col">Role</th>
                 <th scope="col">Total points</th>
                 <th scope="col">Discount</th>
@@ -35,8 +37,10 @@
             <#list page.content as user>
                 <tr>
                     <td>${user.username}</td>
+                    <td>${user.name}</td>
+                    <td>${user.surname}</td>
                     <td><#list user.roles as role>${role}<#sep>, </#list></td>
-                    <td>${user.score}</td>
+                    <td><#if user.score??>${user.score}<#else>0</#if></td>
                     <form method="post" action="/user" class="form-inline">
                     <td>
                         <div class="row">
@@ -70,7 +74,7 @@
                         </div>
                     </td>
                     </form>
-                    <td><a href="/user/${user.id}">edit</a></td>
+                    <td><a href="/user/${user.username}">edit</a></td>
                 </tr>
             </#list>
         </tbody>
@@ -116,7 +120,7 @@
                             </div>
                     </td>
                 </form>
-                <td><a href="/user/${user.id}">edit</a></td>
+                <td><a href="/user/${user.username}">edit</a></td>
                 </tr>
             </#list>
         </tbody>

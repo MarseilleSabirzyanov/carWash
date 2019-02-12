@@ -2,6 +2,7 @@
 <#import "parts/pager.ftl" as p>
 
 <@c.page>
+    <title>Profile</title>
 <form method="post">
     <h5>${username}</h5>
     <#if message??>
@@ -9,6 +10,54 @@
             ${message}
         </div>
     </#if>
+    <div class="form-group row">
+        <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+        <div class="col-sm-6">
+            <input type="text" name="name" value="${oldName}" class="form-control ${(nameError??)?string('is-invalid', '')} ${(nameSuccess??)?string('is-valid', '')}" id="inputName" placeholder="Name">
+            <#if nameError??>
+                <div class="invalid-feedback">
+                ${nameError}
+                </div>
+            </#if>
+            <#if nameSuccess??>
+                <div class="valid-feedback">
+                ${nameSuccess}
+                </div>
+            </#if>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputSurname" class="col-sm-2 col-form-label">Surname</label>
+        <div class="col-sm-6">
+            <input type="text" name="surname" value="${oldSurname}" class="form-control ${(surnameError??)?string('is-invalid', '')} ${(surnameSuccess??)?string('is-valid', '')}" id="inputSurname" placeholder="Surname">
+            <#if surnameError??>
+                <div class="invalid-feedback">
+                ${surnameError}
+                </div>
+            </#if>
+            <#if surnameSuccess??>
+                <div class="valid-feedback">
+                ${surnameSuccess}
+                </div>
+            </#if>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputPhone" class="col-sm-2 col-form-label">Phone number</label>
+        <div class="col-sm-6">
+            <input type="text" name="phone" value="${oldPhone}" class="form-control ${(phoneError??)?string('is-invalid', '')} ${(phoneSuccess??)?string('is-valid', '')}" id="inputPhone" placeholder="Phone number">
+            <#if phoneError??>
+                <div class="invalid-feedback">
+                ${phoneError}
+                </div>
+            </#if>
+            <#if phoneSuccess??>
+                <div class="valid-feedback">
+                ${phoneSuccess}
+                </div>
+            </#if>
+        </div>
+    </div>
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">Password:</label>
         <div class="col-sm-6">
@@ -39,7 +88,7 @@
     <div class="form-group row">
         <label class="col-sm-2 col-form-label">Email:</label>
         <div class="col-sm-6">
-            <input type="email" name="email" class="form-control ${(emailSuccess??)?string('is-valid', '')} ${(emailError??)?string('is-invalid', '')}" placeholder="some@some.com" value="${email}"/>
+            <input type="email" name="email" class="form-control ${(emailSuccess??)?string('is-valid', '')} ${(emailError??)?string('is-invalid', '')}" placeholder="some@some.com" value="<#if email??>${email}<#else>some@some</#if>"/>
             <#if emailError??>
                 <div class="invalid-feedback">
                 ${emailError}
@@ -55,7 +104,7 @@
     <div class="form-group row">
         <label class="col-sm-2">Total points:</label>
         <div class="col-sm-6">
-            ${score}
+            <#if score??>${score}<#else>0</#if>
         </div>
     </div>
     <input type="hidden" name="_csrf" value="${_csrf.token}" />

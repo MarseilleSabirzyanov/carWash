@@ -67,6 +67,12 @@ public class UserService implements UserDetailsService {
             return false;
         }
 
+        if (user.getSurname() == null) {
+            user.setSurname("");
+        }
+        if (user.getPhone() == null) {
+            user.setPhone("");
+        }
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
@@ -87,7 +93,7 @@ public class UserService implements UserDetailsService {
               "Hello, %s! \n" +
                       "Welcome. Please visit this link for the activation your account: http://localhost:8080/activate/%s " +
                     "This is your password: %s",
-                    user.getUsername(),
+                    user.getName(),
                     user.getActivationCode(),
                     password
             );
@@ -101,7 +107,7 @@ public class UserService implements UserDetailsService {
             String message = String.format(
                     "Hello, %s! \n" +
                             "Welcome. Please visit this link for the activation your account: http://localhost:8080/activate/%s",
-                    user.getUsername(),
+                    user.getName(),
                     user.getActivationCode()
             );
 
@@ -114,7 +120,7 @@ public class UserService implements UserDetailsService {
             String message = String.format(
                     "Hello, %s! \n" +
                             "This is your new password: %s",
-                    findUserByEmail(email).getUsername(),
+                    findUserByEmail(email).getName(),
                     password
             );
 
@@ -147,18 +153,14 @@ public class UserService implements UserDetailsService {
     }
 
     public void saveUser(User user,
-                         String username,
                          String email,
-                         User admin,
+                         //User admin,
                          Map<String, String> form,
-                         Model model
+                         Model model,
+                         String name,
+                         String surname,
+                         String phone
     ) {
-            String oldUsername = user.getUsername();
-            if (!username.equals(user.getUsername())) {
-                user.setUsername(username);
-                model.addAttribute("usernameSuccess", "Username successfully changed");
-            }
-
             if (!email.equals(user.getEmail())) {
                 user.setEmail(email);
                 user.setActivationCode(UUID.randomUUID().toString());
@@ -168,6 +170,18 @@ public class UserService implements UserDetailsService {
                 model.addAttribute("emailSuccess", "Email successfully changed, please activate your email and change password");
             }
 
+            if (!name.equals(user.getName())) {
+                user.setName(name);
+                model.addAttribute("nameSuccess", "Name successfully changed");
+            }
+            if (surname != null && !surname.equals(user.getSurname())) {
+                user.setSurname(surname);
+                model.addAttribute("surnameSuccess", "Surname successfully changed");
+            }
+            if (phone != null && !phone.equals(user.getPhone())) {
+                user.setPhone(phone);
+                model.addAttribute("phoneSuccess", "Phone successfully changed");
+            }
             Set<String> roles = Arrays.stream(Role.values())
                     .map(Role::name)
                     .collect(Collectors.toSet());
@@ -183,12 +197,12 @@ public class UserService implements UserDetailsService {
             userRepository.save(user);
 
 
-            if (!oldUsername.equals(username)) {
+            /*  if (!oldUsername.equals(username)) {
                 Date date = new Date();
                 History history = new History(date, user.getScore(), user, admin);
                 history.setOp("Username was changed from " + oldUsername + " to " + username);
                 historyRepository.save(history);
-            }
+            }*/
 
     }
 
@@ -214,7 +228,7 @@ public class UserService implements UserDetailsService {
         model.addAttribute("url", "/user");
     }
 
-    public void updateProfile(User user, String password, String email, Model model) {
+    public void updateProfile(User user, String password, String email, Model model, String name, String surname, String phone) {
 
         String userEmail = user.getEmail();
 
@@ -232,6 +246,22 @@ public class UserService implements UserDetailsService {
         if (!password.equals("")) {
             user.setPassword(encodedPassword(password));
             model.addAttribute("passwordSuccess", "Password successfully updated");
+        }
+
+        if (name == null || name.isEmpty()){
+            model.addAttribute("nameError", "Name can't be empty");
+        } else
+        if (!name.equals(user.getName())) {
+            user.setName(name);
+            model.addAttribute("nameSuccess", "Name successfully changed");
+        }
+        if (surname != null && !surname.equals(user.getSurname())) {
+            user.setSurname(surname);
+            model.addAttribute("surnameSuccess", "Surname successfully changed");
+        }
+        if (phone != null && !phone.equals(user.getPhone())) {
+            user.setPhone(phone);
+            model.addAttribute("phoneSuccess", "Phone successfully changed");
         }
 
         userRepository.save(user);
@@ -299,5 +329,19 @@ public class UserService implements UserDetailsService {
         } else {
             model.addAttribute("emailError", "Email not founded");
         }
+    }
+
+    public boolean checkUsername(String username, Model model) {
+        if (username.length() != 7) {
+            model.addAttribute("usernameError", "length must be equal to 7");
+            return false;
+        }
+        for (int i = 0; i < username.length(); i++) {
+            if (!Character.isDigit(username.charAt(i))) {
+                model.addAttribute("usernameError", "username must consist of numbers only");
+                return false;
+            }
+        }
+        return true;
     }
 }

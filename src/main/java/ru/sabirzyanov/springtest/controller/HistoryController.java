@@ -59,6 +59,7 @@ public class HistoryController {
             Model model,
             @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable
     ) {
+        model.addAttribute("title", "History");
         Page<History> page;
 
         if(username != null && !username.isEmpty() && admin != null && !admin.isEmpty() && dateFrom != null && dateTo != null) {

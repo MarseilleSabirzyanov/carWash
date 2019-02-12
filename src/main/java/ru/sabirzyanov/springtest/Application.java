@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 //TODO изменение данных юзера
 //TODO поменять id пользователя на число из 9 цифр
-
+//TODO db migration admin config
 
 @SpringBootApplication
 public class Application {

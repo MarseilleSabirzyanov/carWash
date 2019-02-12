@@ -42,17 +42,24 @@ public class UserController {
                            @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable
     ) {
 
+        model.addAttribute("title", "User list");
         userService.userListCreator(model, pageable, username);
 
         return "user";
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("{user}")
-    public String userEditForm(@PathVariable User user, Model model) {
+    @GetMapping("{username}")
+    public String userEditForm(/*@PathVariable User user,*/ Model model, @PathVariable String username) {
+        User user = userService.findUser(username);
+
+        model.addAttribute("title", "Profile");
         model.addAttribute("user", user);
         model.addAttribute("roles", Role.values());
         model.addAttribute("oldUsername", user.getUsername());
+        model.addAttribute("oldName", user.getName());
+        model.addAttribute("oldSurname", user.getSurname());
+        model.addAttribute("oldPhone", user.getPhone());
         model.addAttribute("oldEmail", user.getEmail());
         model.addAttribute("oldActivatedPoints", 0);
 
@@ -92,59 +99,67 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping(value = "{user}", params = "save")
+    @PostMapping(value = "{username}", params = "save")
     public String userSave(
             @AuthenticationPrincipal User admin,
             Model model,
-            @RequestParam String username,
+            @RequestParam String name,
+            @RequestParam String surname,
+            @RequestParam String phone,
             @RequestParam String email,
             @RequestParam Map<String, String> form,
             @RequestParam Long activatedPoints,
-            @PathVariable @RequestParam("userId") User user
+            @PathVariable String username
+            //@RequestParam("userId") User user
     ) {
+        User user = userService.findUser(username);
+
+        model.addAttribute("title", "profile");
         model.addAttribute("user", user);
         model.addAttribute("roles", Role.values());
-        model.addAttribute("oldUsername", username);
+        model.addAttribute("oldName", name);
+        model.addAttribute("oldSurname", surname);
+        model.addAttribute("oldPhone", phone);
         model.addAttribute("oldEmail", email);
         model.addAttribute("oldActivatedPoints", activatedPoints);
 
-        if (userService.findUser(username) == null || user.getUsername().equals(username)) {
-            if (userService.findUserByEmail(email) == null || user.getEmail().equals(email)) {
-                userService.saveUser(user, username, email, admin, form, model);
-            }
-            else {
-                model.addAttribute("emailError", "A user with same email already exist");
-                return "userEdit";
-            }
+
+        if (userService.findUserByEmail(email) == null || user.getEmail().equals(email)) {
+                userService.saveUser(user, email, form, model, name, surname, phone);
         }
         else {
-            model.addAttribute("usernameError", "A user with same username already exist");
+            model.addAttribute("emailError", "A user with same email already exist");
             return "userEdit";
         }
 
         return "userEdit";
     }
 
-
     /*
     *  500 баллов = 1 услуга
     * */
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping(value = "{user}", params = "activatePoints")
+    @PostMapping(value = "{username}", params = "activatePoints")
     public String activatePoints(
             @AuthenticationPrincipal User admin,
-            @PathVariable @RequestParam("userId") User user,
+            @PathVariable String username,
+            //@RequestParam("userId") User user,
             @RequestParam Long activatedPoints,
             Model model
     ) {
+        User user = userService.findUser(username);
+
+        model.addAttribute("title", "Profile");
         model.addAttribute("user", user);
         model.addAttribute("roles", Role.values());
-        model.addAttribute("oldUsername", user.getUsername());
+        model.addAttribute("oldName", user.getName());
+        model.addAttribute("oldSurname", user.getSurname());
+        model.addAttribute("oldPhone", user.getPhone());
         model.addAttribute("oldEmail", user.getEmail());
         model.addAttribute("oldActivatedPoints", activatedPoints);
 
         if (activatedPoints == 0) {
-            return "redirect:/user/" + user.getId();
+            return "redirect:/user/" + user.getUsername();
         }
         userService.activatePoints(user, admin, activatedPoints, model);
         return "userEdit";
@@ -178,6 +193,10 @@ public class UserController {
         Page<History> page;
         page = historyService.findUserDate(user.getId(), dateFrom, dateTo, pageable);
 
+        model.addAttribute("title", "Profile");
+        model.addAttribute("oldName", user.getName());
+        model.addAttribute("oldSurname", user.getSurname());
+        model.addAttribute("oldPhone", user.getPhone());
         model.addAttribute("username", user.getUsername());
         model.addAttribute("email", user.getEmail());
         model.addAttribute("score", user.getScore());
@@ -192,6 +211,9 @@ public class UserController {
             Model model,
             @RequestParam("password2") String passwordConfirmation,
             @RequestParam String password,
+            @RequestParam String name,
+            @RequestParam String surname,
+            @RequestParam String phone,
             @RequestParam String email,
             @RequestParam(required = false, defaultValue = "2000-01-01") @DateTimeFormat(pattern="yyyy-MM-dd") Date dateFrom,
             @RequestParam(required = false, defaultValue = "today") @DateTimeFormat(pattern="yyyy-MM-dd") Date dateTo,
@@ -200,6 +222,10 @@ public class UserController {
         Page<History> page;
         page = historyService.findUserDate(user.getId(), dateFrom, dateTo, pageable);
 
+        model.addAttribute("title", "Profile");
+        model.addAttribute("oldName", name);
+        model.addAttribute("oldSurname", surname);
+        model.addAttribute("oldPhone", phone);
         model.addAttribute("username", user.getUsername());
         model.addAttribute("email", user.getEmail());
         model.addAttribute("score", user.getScore());
@@ -211,7 +237,7 @@ public class UserController {
             return "profile";
         }
         if (StringUtils.isEmpty(password) && StringUtils.isEmpty(passwordConfirmation))
-            userService.updateProfile(user, "", email, model);
+            userService.updateProfile(user, "", email, model, name, surname, phone);
         else if (!StringUtils.isEmpty(password)) {
             boolean isConfirmEmpty = StringUtils.isEmpty(passwordConfirmation);
             if (isConfirmEmpty) {
@@ -223,7 +249,7 @@ public class UserController {
                 model.addAttribute("passwordError", "Passwords are different");
                 return "profile";
             }
-            userService.updateProfile(user, password, email, model);
+            userService.updateProfile(user, password, email, model, name, surname, phone);
         }
 
         return "profile";

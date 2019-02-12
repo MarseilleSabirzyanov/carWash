@@ -3,9 +3,8 @@
     <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>QLity</title>
         <link rel="stylesheet" href="/static/style.css">
-
+        <title><#if title??>${title}<#else>Qlity</#if></title>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <!-- Bootstrap CSS -->

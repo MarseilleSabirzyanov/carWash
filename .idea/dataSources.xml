@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="car_washing_db@localhost" uuid="1e53ab1d-18bd-46d4-9da8-0c448efe22bb">
+    <data-source source="LOCAL" name="car_wash@localhost" uuid="f09a8225-7222-4f87-93c2-d587875f4ded">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/car_washing_db</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:5432/car_wash</jdbc-url>
     </data-source>
   </component>
 </project>

@@ -51,6 +51,10 @@ public class RegistrationController {
             model.addAttribute("passwordError", "Passwords are different");
         }*/
 
+        if (!userService.checkUsername(user.getUsername(), model))
+        {
+            return "registration";
+        }
         if (/*isConfirmEmpty ||*/ bindingResult.hasErrors()) {
             Map<String, String> errors = ControllerUtils.getErrors(bindingResult);
 
