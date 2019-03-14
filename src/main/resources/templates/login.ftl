@@ -2,11 +2,11 @@
 <#import "parts/login.ftl" as l>
 
 <@c.page>
-    <#--<#if Session?? && Session.SPRING_SECURITY_LAST_EXCEPTION??>
+    <#if Session?? && Session.SPRING_SECURITY_LAST_EXCEPTION??>
         <div class="alert alert-danger" role="alert">
-            Username or password is incorrect or email not activated!
+            ${Session.SPRING_SECURITY_LAST_EXCEPTION.message}
         </div>
-    </#if>-->
+    </#if>
     <#--<#if passwordError??>
         <div class="invalid-feedback">
         ${passwordError}
@@ -24,6 +24,6 @@
     </#if>-->
     <@l.login "/login" false/>
     <div class="mt-2">
-        <td><a href="/restore_account">Forgot password</a></td>
+        <td><a href="/restore_account">Забыли пароль?</a></td>
     </div>
 </@c.page>

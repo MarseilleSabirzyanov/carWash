@@ -11,21 +11,21 @@
     <form method="get" action="/history" class="form-inline mb-3">
     <div class="form-row">
         <div class="form-group col-md-6">
-            <input type="text" name="username" class="form-control" id="username" value="${username!}" placeholder="Search by username">
+            <input type="text" name="username" class="form-control" id="username" value="${username!}" placeholder="Поиск по user ID">
         </div>
          <div class="form-group col-md-6">
-                <input type="text" name="admin" class="form-control" value="${admin!}" placeholder="Search by admin name">
+                <input type="text" name="admin" class="form-control" value="${admin!}" placeholder="Поиск по имени админа">
         </div>
     </div>
     <div class="form-row ml-2">
         <div class="form-group col-md-6">
-                <input type="date" name="dateFrom" class="form-control" value="${dateFrom!}" placeholder="Search by date">
+                <input type="date" name="dateFrom" class="form-control" value="${dateFrom!}" placeholder="Поиск по дате">
         </div>
         <div class="form-group col-md-6">
-                <input type="date" name="dateTo" class="form-control" value="${dateTo!}" placeholder="Search by date">
+                <input type="date" name="dateTo" class="form-control" value="${dateTo!}" placeholder="Поиск по дате">
         </div>
     </div>
-                <button type="submit" class="btn btn-primary ml-2">Search</button>
+                <button type="submit" class="btn btn-primary ml-2">Поиск</button>
     </form>
 
     <@p.pager url page />
@@ -33,11 +33,11 @@
     <table class="table">
         <thead class="thead-dark">
             <tr>
-                <th scope="col">Date</th>
-                <th scope="col">Total</th>
-                <th scope="col">User name</th>
-                <th scope="col">Admin name</th>
-                <th scope="col">Operation</th>
+                <th scope="col">Дата</th>
+                <th scope="col">Баллы</th>
+                <th scope="col">User ID</th>
+                <th scope="col">Админ</th>
+                <th scope="col">Операция</th>
                 <th scope="col"></th>
             </tr>
         </thead>
@@ -49,7 +49,7 @@
         <td>${history.getUser().username}</td>
         <td>${history.getAdmin().username}</td>
         <td>${history.getOp()}</td>
-        <td><a href="/user/${history.getUser().id}">edit</a></td>
+        <td><a href="/user/${history.getUser().id}">профиль</a></td>
         </tr>
     </#list>
     </tbody>

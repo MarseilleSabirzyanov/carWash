@@ -41,7 +41,6 @@ public class RegistrationController {
                           Model model
     ) {
 
-        //TODO убрать ошибку после обновления страницы
         //boolean isConfirmEmpty = StringUtils.isEmpty(passwordConfirmation);
         /*if (isConfirmEmpty) {
             model.addAttribute("password2Error", "Password confirmation can not be empty");

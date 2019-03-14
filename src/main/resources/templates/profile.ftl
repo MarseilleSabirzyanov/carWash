@@ -2,7 +2,7 @@
 <#import "parts/pager.ftl" as p>
 
 <@c.page>
-    <title>Profile</title>
+    <title>Профиль</title>
 <form method="post">
     <h5>${username}</h5>
     <#if message??>
@@ -11,9 +11,9 @@
         </div>
     </#if>
     <div class="form-group row">
-        <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+        <label for="inputName" class="col-sm-2 col-form-label">Имя</label>
         <div class="col-sm-6">
-            <input type="text" name="name" value="${oldName}" class="form-control ${(nameError??)?string('is-invalid', '')} ${(nameSuccess??)?string('is-valid', '')}" id="inputName" placeholder="Name">
+            <input type="text" name="name" value="${oldName}" class="form-control ${(nameError??)?string('is-invalid', '')} ${(nameSuccess??)?string('is-valid', '')}" id="inputName" placeholder="Имя">
             <#if nameError??>
                 <div class="invalid-feedback">
                 ${nameError}
@@ -27,9 +27,9 @@
         </div>
     </div>
     <div class="form-group row">
-        <label for="inputSurname" class="col-sm-2 col-form-label">Surname</label>
+        <label for="inputSurname" class="col-sm-2 col-form-label">Фамилия</label>
         <div class="col-sm-6">
-            <input type="text" name="surname" value="${oldSurname}" class="form-control ${(surnameError??)?string('is-invalid', '')} ${(surnameSuccess??)?string('is-valid', '')}" id="inputSurname" placeholder="Surname">
+            <input type="text" name="surname" value="${oldSurname}" class="form-control ${(surnameError??)?string('is-invalid', '')} ${(surnameSuccess??)?string('is-valid', '')}" id="inputSurname" placeholder="Фамилия">
             <#if surnameError??>
                 <div class="invalid-feedback">
                 ${surnameError}
@@ -43,9 +43,9 @@
         </div>
     </div>
     <div class="form-group row">
-        <label for="inputPhone" class="col-sm-2 col-form-label">Phone number</label>
+        <label for="inputPhone" class="col-sm-2 col-form-label">Номер телефона</label>
         <div class="col-sm-6">
-            <input type="text" name="phone" value="${oldPhone}" class="form-control ${(phoneError??)?string('is-invalid', '')} ${(phoneSuccess??)?string('is-valid', '')}" id="inputPhone" placeholder="Phone number">
+            <input type="text" name="phone" value="${oldPhone}" class="form-control ${(phoneError??)?string('is-invalid', '')} ${(phoneSuccess??)?string('is-valid', '')}" id="inputPhone" placeholder="8-xxx-xxx-xx-xx">
             <#if phoneError??>
                 <div class="invalid-feedback">
                 ${phoneError}
@@ -59,9 +59,9 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Password:</label>
+        <label class="col-sm-2 col-form-label">Пароль:</label>
         <div class="col-sm-6">
-            <input type="password" name="password" class="form-control ${(passwordError??)?string('is-invalid', '')} ${(passwordSuccess??)?string('is-valid', '')}" placeholder="Password" />
+            <input type="password" name="password" class="form-control ${(passwordError??)?string('is-invalid', '')} ${(passwordSuccess??)?string('is-valid', '')}" placeholder="Пароль" />
             <#if passwordError??>
                 <div class="invalid-feedback">
                 ${passwordError}
@@ -75,9 +75,9 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Password confirmation:</label>
+        <label class="col-sm-2 col-form-label">Повтор пароля:</label>
         <div class="col-sm-6">
-            <input type="password" name="password2" class="form-control ${(password2Error??)?string('is-invalid', '')}" placeholder="Password confirmation" />
+            <input type="password" name="password2" class="form-control ${(password2Error??)?string('is-invalid', '')}" placeholder="Повтор пароля" />
             <#if password2Error??>
                 <div class="invalid-feedback">
                 ${password2Error}
@@ -102,17 +102,17 @@
         </div>
     </div>
     <div class="form-group row">
-        <label class="col-sm-2">Total points:</label>
+        <label class="col-sm-2">Баллы:</label>
         <div class="col-sm-6">
             <#if score??>${score}<#else>0</#if>
         </div>
     </div>
     <input type="hidden" name="_csrf" value="${_csrf.token}" />
-    <button class="btn btn-primary" type="submit">Save</button>
+    <button class="btn btn-primary" type="submit">Сохранить</button>
 
     <div class="my-3">
         <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-            Operations history
+            История операций
         </button>
     </div>
     <div class="collapse" id="collapseExample">
@@ -121,10 +121,9 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr>
-                        <th scope="col">Date</th>
-                        <th scope="col">Total</th>
-                        <th scope="col">Admin name</th>
-                        <th scope="col">Operation</th>
+                        <th scope="col">Дата</th>
+                        <th scope="col">Баллы</th>
+                        <th scope="col">Операция</th>
                     </tr>
                 </thead>
                     <tbody>
@@ -132,7 +131,6 @@
                         <tr>
                         <td>${history.date}</td>
                         <td>${history.total}</td>
-                        <td>${history.getAdmin().username}</td>
                         <td>${history.getOp()}</td>
                         </tr>
                     </#list>

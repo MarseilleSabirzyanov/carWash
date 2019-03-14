@@ -1,5 +1,7 @@
 package ru.sabirzyanov.springtest.service;
 
+import org.springframework.security.authentication.LockedException;
+import  ru.sabirzyanov.springtest.exceptions.*;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,11 +41,16 @@ public class UserService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, UserNotFoundExceptionCustom, LockedException {
         User user = userRepository.findByUsername(username);
 
+        if (user == null) {
+            throw new UserNotFoundExceptionCustom("cocu");
+        }
+
         if (user.getActivationCode() != null ) {
-            throw new UsernameNotFoundException("email is not activated");
+            throw new LockedException("email is not activated");
+            //throw new UsernameNotFoundException("email is not activated");
         }
 
         return user;

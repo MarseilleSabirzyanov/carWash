@@ -26,9 +26,9 @@
             </div>
         </div>-->
         <div class="form-group row">
-            <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+            <label for="inputName" class="col-sm-2 col-form-label">Имя</label>
             <div class="col-sm-6">
-                <input type="text" name="name" value="${oldName}" class="form-control ${(nameError??)?string('is-invalid', '')} ${(nameSuccess??)?string('is-valid', '')}" id="inputName" placeholder="Name">
+                <input type="text" name="name" value="${oldName}" class="form-control ${(nameError??)?string('is-invalid', '')} ${(nameSuccess??)?string('is-valid', '')}" id="inputName" placeholder="Имя">
                 <#if nameError??>
                     <div class="invalid-feedback">
                     ${nameError}
@@ -42,9 +42,9 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="inputSurname" class="col-sm-2 col-form-label">Surname</label>
+            <label for="inputSurname" class="col-sm-2 col-form-label">Фамилия</label>
             <div class="col-sm-6">
-                <input type="text" name="surname" value="${oldSurname}" class="form-control ${(surnameError??)?string('is-invalid', '')} ${(surnameSuccess??)?string('is-valid', '')}" id="inputSurname" placeholder="Surname">
+                <input type="text" name="surname" value="${oldSurname}" class="form-control ${(surnameError??)?string('is-invalid', '')} ${(surnameSuccess??)?string('is-valid', '')}" id="inputSurname" placeholder="Фамилия">
                 <#if surnameError??>
                     <div class="invalid-feedback">
                     ${surnameError}
@@ -58,9 +58,9 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="inputPhone" class="col-sm-2 col-form-label">Phone number</label>
+            <label for="inputPhone" class="col-sm-2 col-form-label">Номер телефона</label>
             <div class="col-sm-6">
-                <input type="text" name="phone" value="${oldPhone}" class="form-control ${(phoneError??)?string('is-invalid', '')} ${(phoneSuccess??)?string('is-valid', '')}" id="inputPhone" placeholder="Phone number">
+                <input type="text" name="phone" value="${oldPhone}" class="form-control ${(phoneError??)?string('is-invalid', '')} ${(phoneSuccess??)?string('is-valid', '')}" id="inputPhone" placeholder="Номер телефона">
                 <#if phoneError??>
                     <div class="invalid-feedback">
                     ${phoneError}
@@ -90,7 +90,7 @@
             </div>
         </div>
         <div class="form-group row">
-                <legend class="col-sm-2 col-form-label">Roles</legend>
+                <legend class="col-sm-2 col-form-label">Роль</legend>
                     <div class="col-sm-6">
                         <#list roles as role>
                             <div class="form-check">
@@ -102,17 +102,17 @@
         </div>
         <input type="hidden" value="${user.id}" name="userId">
         <input type="hidden" value="${_csrf.token}" name="_csrf">
-        <button type="submit" class="btn btn-primary " name="save" value="save">Save</button>
+        <button type="submit" class="btn btn-primary " name="save" value="save">Сохранить</button>
         <input type="hidden" value="${user.id}" name="userId">
         <div class="form-group row mt-4">
-            <label class="col-sm-2">Total points:</label>
+            <label class="col-sm-2">Баллы:</label>
             <div class="col-sm-6">
                 ${user.score}
             </div>
         </div>
 
     <div class="form-group row">
-    <label for="inputActivatePoints" class="col-sm-2 col-form-label">Activate points</label>
+    <label for="inputActivatePoints" class="col-sm-2 col-form-label">Активировать баллы</label>
         <div class="col-sm-6">
             <input type="text" name="activatedPoints" value="${oldActivatedPoints}" class="form-control ${(activatedPointsError??)?string('is-invalid', '')} ${(activatedPointsSuccess??)?string('is-valid', '')}" id="inputActivatePoints" >
             <#if activatedPointsError??>
@@ -127,6 +127,6 @@
             </#if>
         </div>
     </div>
-        <button type="submit" class="btn btn-primary" name="activatePoints" value="activatePoints">Use points</button>
+        <button type="submit" class="btn btn-primary" name="activatePoints" value="activatePoints">Использовать баллы</button>
     </form>
 </@c.page>

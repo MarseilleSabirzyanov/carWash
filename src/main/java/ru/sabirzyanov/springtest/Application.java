@@ -6,12 +6,13 @@ package ru.sabirzyanov.springtest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//TODO изменение данных юзера
-//TODO поменять id пользователя на число из 9 цифр
-//TODO db migration admin config
 
 @SpringBootApplication
 public class Application {
+
+    //TODO страницы при поиске
+    //TODO страницы элементы на странице
+    //TODO история кнопка профиля
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

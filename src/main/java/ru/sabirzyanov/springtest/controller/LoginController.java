@@ -1,6 +1,7 @@
 package ru.sabirzyanov.springtest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +26,7 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login() {
+
         Authentication auth = SecurityContextHolder
                 .getContext()
                 .getAuthentication();

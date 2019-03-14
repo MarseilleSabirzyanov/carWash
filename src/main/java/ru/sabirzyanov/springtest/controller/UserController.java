@@ -123,7 +123,6 @@ public class UserController {
         model.addAttribute("oldEmail", email);
         model.addAttribute("oldActivatedPoints", activatedPoints);
 
-
         if (userService.findUserByEmail(email) == null || user.getEmail().equals(email)) {
                 userService.saveUser(user, email, form, model, name, surname, phone);
         }
