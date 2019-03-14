@@ -45,11 +45,11 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUsername(username);
 
         if (user == null) {
-            throw new UserNotFoundExceptionCustom("cocu");
+            throw new UserNotFoundExceptionCustom("");
         }
 
         if (user.getActivationCode() != null ) {
-            throw new LockedException("email is not activated");
+            throw new LockedException("email не активирован");
             //throw new UsernameNotFoundException("email is not activated");
         }
 
@@ -65,12 +65,12 @@ public class UserService implements UserDetailsService {
         User userEmail = userRepository.findByEmail(user.getEmail());
 
         if (userFromDb != null) {
-            model.addAttribute("usernameError", "User exists");
+            model.addAttribute("usernameError", "Пользователь с таким ID уже существует");
             return false;
         }
 
         if (userEmail != null) {
-            model.addAttribute("emailError", "Email exists");
+            model.addAttribute("emailError", "Email уже используется");
             return false;
         }
 
@@ -97,41 +97,41 @@ public class UserService implements UserDetailsService {
     private void sendMessage(User user, String password) {
         if (!StringUtils.isEmpty(user.getEmail())) {
             String message = String.format(
-              "Hello, %s! \n" +
-                      "Welcome. Please visit this link for the activation your account: http://localhost:8080/activate/%s " +
-                    "This is your password: %s",
+              "Здравствуйте, %s! \n" +
+                      "Пожалуйста, перейдите по данной ссылке, чтобы активировать свой аккаунт: http://localhost:8080/activate/%s " +
+                    "Это ваш пароль: %s",
                     user.getName(),
                     user.getActivationCode(),
                     password
             );
 
-            mailSender.send(user.getEmail(), "Activation code", message);
+            mailSender.send(user.getEmail(), "Код активации Сююмбике", message);
         }
     }
 
     private void sendMessage(User user) {
         if (!StringUtils.isEmpty(user.getEmail())) {
             String message = String.format(
-                    "Hello, %s! \n" +
-                            "Welcome. Please visit this link for the activation your account: http://localhost:8080/activate/%s",
+                    "Здравствуйте, %s! \n" +
+                            "Пожалуйста, перейдите по данной ссылке, чтобы активировать свой аккаунт: http://localhost:8080/activate/%s",
                     user.getName(),
                     user.getActivationCode()
             );
 
-            mailSender.send(user.getEmail(), "Activation code", message);
+            mailSender.send(user.getEmail(), "Код активации Сююмбике", message);
         }
     }
 
     private void sendMessage(String email, String password) {
         if (!StringUtils.isEmpty(findUserByEmail(email).getEmail())) {
             String message = String.format(
-                    "Hello, %s! \n" +
-                            "This is your new password: %s",
+                    "Здравствуйте, %s! \n" +
+                            "Это ваш новый пароль: %s",
                     findUserByEmail(email).getName(),
                     password
             );
 
-            mailSender.send(email, "Restore password", message);
+            mailSender.send(email, "Восстановление пароля Сююмбике", message);
         }
     }
 
@@ -174,20 +174,20 @@ public class UserService implements UserDetailsService {
                 user.setPassword(RandomStringUtils.randomAlphanumeric(6));
                 sendMessage(user, user.getPassword());
                 user.setPassword(encodedPassword(user.getPassword()));
-                model.addAttribute("emailSuccess", "Email successfully changed, please activate your email and change password");
+                model.addAttribute("emailSuccess", "Email успешно изменен, пожалуйста активируйте ваш email");
             }
 
             if (!name.equals(user.getName())) {
                 user.setName(name);
-                model.addAttribute("nameSuccess", "Name successfully changed");
+                model.addAttribute("nameSuccess", "Имя успешно изменено");
             }
             if (surname != null && !surname.equals(user.getSurname())) {
                 user.setSurname(surname);
-                model.addAttribute("surnameSuccess", "Surname successfully changed");
+                model.addAttribute("surnameSuccess", "Фамилия успешно изменена");
             }
             if (phone != null && !phone.equals(user.getPhone())) {
                 user.setPhone(phone);
-                model.addAttribute("phoneSuccess", "Phone successfully changed");
+                model.addAttribute("phoneSuccess", "номер телефона успешно изменен");
             }
             Set<String> roles = Arrays.stream(Role.values())
                     .map(Role::name)
@@ -223,7 +223,7 @@ public class UserService implements UserDetailsService {
             }
             else {
                 page = findAll(pageable);
-                model.addAttribute("errorMessage", "User not found");
+                model.addAttribute("errorMessage", "Пользователь не найден");
                 model.addAttribute("page", page);
             }
         } else {
@@ -244,7 +244,7 @@ public class UserService implements UserDetailsService {
 
         if (isEmailChanged) {
             user.setEmail(email);
-            model.addAttribute("emailSuccess", "Email successfully updated");
+            model.addAttribute("emailSuccess", "Email успешно изменен");
 
             if (!StringUtils.isEmpty(email)) {
                 user.setActivationCode(UUID.randomUUID().toString());
@@ -252,23 +252,23 @@ public class UserService implements UserDetailsService {
         }
         if (!password.equals("")) {
             user.setPassword(encodedPassword(password));
-            model.addAttribute("passwordSuccess", "Password successfully updated");
+            model.addAttribute("passwordSuccess", "Пароль успешно изменен");
         }
 
         if (name == null || name.isEmpty()){
-            model.addAttribute("nameError", "Name can't be empty");
+            model.addAttribute("nameError", "Имя не может быть пустым");
         } else
         if (!name.equals(user.getName())) {
             user.setName(name);
-            model.addAttribute("nameSuccess", "Name successfully changed");
+            model.addAttribute("nameSuccess", "Имя успешно изменено");
         }
         if (surname != null && !surname.equals(user.getSurname())) {
             user.setSurname(surname);
-            model.addAttribute("surnameSuccess", "Surname successfully changed");
+            model.addAttribute("surnameSuccess", "Фамилия успешно изменена");
         }
         if (phone != null && !phone.equals(user.getPhone())) {
             user.setPhone(phone);
-            model.addAttribute("phoneSuccess", "Phone successfully changed");
+            model.addAttribute("phoneSuccess", "Номер телефона успешно изменен");
         }
 
         userRepository.save(user);
@@ -294,10 +294,10 @@ public class UserService implements UserDetailsService {
 
     public void activatePoints(User user, User admin, Long activatedPoints, Model model) {
         if (user.getScore() < activatedPoints) {
-            model.addAttribute("activatedPointsError", "You have no enough points");
+            model.addAttribute("activatedPointsError", "У вас недостаточно баллов");
         }
         else if (activatedPoints < 0) {
-            model.addAttribute("activatedPointsError", "Activated points can't be negative");
+            model.addAttribute("activatedPointsError", "Активируемые баллы не могут быть меньше 0");
         } else {
             user.setScore(user.getScore() - activatedPoints);
             userRepository.save(user);
@@ -306,7 +306,7 @@ public class UserService implements UserDetailsService {
             History history = new History(date, user.getScore(), user, admin);
             history.setOp("-" + activatedPoints);
             historyRepository.save(history);
-            model.addAttribute("activatedPointsSuccess", "Points successfully activated");
+            model.addAttribute("activatedPointsSuccess", "Баллы успешно активированы");
         }
 
         /*if (user.getScore() >= 500) {
@@ -330,22 +330,22 @@ public class UserService implements UserDetailsService {
             user.setPassword(RandomStringUtils.randomAlphanumeric(6));
             sendMessage(email, user.getPassword());
             user.setPassword(encodedPassword(user.getPassword()));
-            model.addAttribute("emailSuccess", "New password sent to email");
+            model.addAttribute("emailSuccess", "Новый пароль отправлен на почту");
 
             userRepository.save(user);
         } else {
-            model.addAttribute("emailError", "Email not founded");
+            model.addAttribute("emailError", "Email не найден");
         }
     }
 
     public boolean checkUsername(String username, Model model) {
         if (username.length() != 7) {
-            model.addAttribute("usernameError", "length must be equal to 7");
+            model.addAttribute("usernameError", "Длина user ID должна быть равна 7");
             return false;
         }
         for (int i = 0; i < username.length(); i++) {
             if (!Character.isDigit(username.charAt(i))) {
-                model.addAttribute("usernameError", "username must consist of numbers only");
+                model.addAttribute("usernameError", "User ID может состоять только из цифр");
                 return false;
             }
         }

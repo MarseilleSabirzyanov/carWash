@@ -47,15 +47,15 @@ public class LoginController {
         User user = userService.findUser(username);
 
         if (user == null) {
-            model.addAttribute("loginError", "login or password is incorrect");
+            model.addAttribute("loginError", "логин или пароль неверны");
             return "login";
         } else if(!user.getPassword().equals(userService.encodedPassword(password))) {
-            model.addAttribute("loginError", "login or password is incorrect");
+            model.addAttribute("loginError", "логин или пароль неверны");
             return "login";
         }
 
         if (user.getActivationCode() != null) {
-            model.addAttribute("activationCodeError", "Email not activated");
+            model.addAttribute("activationCodeError", "Email не активирован");
             return "login";
         }
 

@@ -42,7 +42,7 @@ public class UserController {
                            @PageableDefault(sort = { "id" }, direction = Sort.Direction.DESC) Pageable pageable
     ) {
 
-        model.addAttribute("title", "User list");
+        model.addAttribute("title", "Список пользователей");
         userService.userListCreator(model, pageable, username);
 
         return "user";
@@ -80,12 +80,12 @@ public class UserController {
         model.addAttribute("pointErrorUsername", usernamePost);
 
         if (points < 0 && (discount < 0 || discount > 100)) {
-            model.addAttribute("pointsError", "Point can't be negative!");
-            model.addAttribute("discountError", "From 0 to 100");
+            model.addAttribute("pointsError", "Баллы не могут быть отрицательными!");
+            model.addAttribute("discountError", "от 0 до 100");
         } else if (points < 0){
-            model.addAttribute("pointsError", "Point can't be negative!");
+            model.addAttribute("pointsError", "Баллы не могут быть отрицательными!");
         } else if (discount < 0 || discount > 100) {
-            model.addAttribute("discountError", "From 0 to 100");
+            model.addAttribute("discountError", "от 0 до 100");
         } else {
             userService.addPoints(usernamePost, discount, points, admin);
             return "redirect:user";
@@ -127,7 +127,7 @@ public class UserController {
                 userService.saveUser(user, email, form, model, name, surname, phone);
         }
         else {
-            model.addAttribute("emailError", "A user with same email already exist");
+            model.addAttribute("emailError", "Пользователь с таким же emailом уже существует!");
             return "userEdit";
         }
 
@@ -232,7 +232,7 @@ public class UserController {
 
         if (userService.findUserByEmail(email) != null && !email.equals(user.getEmail())) {
             model.addAttribute("email", email);
-            model.addAttribute("emailError", "Email exist");
+            model.addAttribute("emailError", "Такой email уже существует");
             return "profile";
         }
         if (StringUtils.isEmpty(password) && StringUtils.isEmpty(passwordConfirmation))
@@ -240,12 +240,12 @@ public class UserController {
         else if (!StringUtils.isEmpty(password)) {
             boolean isConfirmEmpty = StringUtils.isEmpty(passwordConfirmation);
             if (isConfirmEmpty) {
-                model.addAttribute("password2Error", "Password confirmation can not be empty");
+                model.addAttribute("password2Error", "Подтверждение пароля не может быть пустым");
                 return "profile";
             }
 
             if (!password.equals(passwordConfirmation)) {
-                model.addAttribute("passwordError", "Passwords are different");
+                model.addAttribute("passwordError", "Пароли не совпадают");
                 return "profile";
             }
             userService.updateProfile(user, password, email, model, name, surname, phone);

@@ -25,21 +25,21 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(length = 7)
-    @NotBlank(message = "Username cannot be empty")
+    @NotBlank(message = "User ID не может быть пустым")
     private String username;
 
     //@NotBlank(message = "Password cannot be empty")
     private String password;
 
-    @NotBlank(message = "Name cannot be empty")
+    @NotBlank(message = "Имя не может быть пустым")
     private String name = "";
 
     private String phone;
 
     private String surname = "";
 
-    @Email(message = "Email is not correct")
-    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Email не корректный")
+    @NotBlank(message = "Email не может быть пустым")
     private String email = "";
     private Long score = 0L;
     private boolean active;

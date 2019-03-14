@@ -66,7 +66,7 @@ public class RegistrationController {
             return "registration";
         }
 
-        model.addAttribute("registrationSuccess", "User successfully registered!");
+        model.addAttribute("registrationSuccess", "Пользователь успешно зарегистрирован!");
 
         return "registration";
     }
@@ -77,10 +77,10 @@ public class RegistrationController {
 
         if (isActivated) {
             model.addAttribute("messageType", "success");
-            model.addAttribute("message", "User activated");
+            model.addAttribute("message", "Пользователь активирован");
         } else {
             model.addAttribute("messageType", "danger");
-            model.addAttribute("message", "Activation code is not found");
+            model.addAttribute("message", "Код активации не найден");
         }
 
         return "login";

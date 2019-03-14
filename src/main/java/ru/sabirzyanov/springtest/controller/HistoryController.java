@@ -65,17 +65,17 @@ public class HistoryController {
         if(username != null && !username.isEmpty() && admin != null && !admin.isEmpty() && dateFrom != null && dateTo != null) {
 
             if (userService.findUser(username) == null && userService.findUser(admin) == null) {
-                model.addAttribute("errorMessage", "User and admin not found");
+                model.addAttribute("errorMessage", "User ID и админ не найдены");
                 page = historyService.findDate(dateFrom, dateTo, pageable);
                 model.addAttribute("page", page);
             }
             else if (userService.findUser(username) == null) {
-                model.addAttribute("errorMessage", "User not found");
+                model.addAttribute("errorMessage", "User ID не найден");
                 page = historyService.findDate(dateFrom, dateTo, pageable);
                 model.addAttribute("page", page);
             }
             else if (userService.findUser(admin) == null) {
-                model.addAttribute("errorMessage", "Admin not found");
+                model.addAttribute("errorMessage", "Админ не найден");
                 page = historyService.findDate(dateFrom, dateTo, pageable);
                 model.addAttribute("page", page);
             }
@@ -90,7 +90,7 @@ public class HistoryController {
         }
         else if (username != null && !username.isEmpty()) {
             if (userService.findUser(username) == null) {
-                model.addAttribute("errorMessage", "User not found");
+                model.addAttribute("errorMessage", "User ID не найден");
                 page = historyService.findDate(dateFrom, dateTo, pageable);
                 model.addAttribute("page", page);
             }
@@ -100,7 +100,7 @@ public class HistoryController {
             }
         } else if (admin != null && !admin.isEmpty()) {
             if (userService.findUser(admin) == null) {
-                model.addAttribute("errorMessage", "Admin not found");
+                model.addAttribute("errorMessage", "Админ не найден");
                 page = historyService.findDate(dateFrom, dateTo, pageable);
                 model.addAttribute("page", page);
             } else {
