@@ -49,7 +49,7 @@
         <td>${history.getUser().username}</td>
         <td>${history.getAdmin().username}</td>
         <td>${history.getOp()}</td>
-        <td><a href="/user/${history.getUser().id}">профиль</a></td>
+        <td><a href="/user/${history.getUser().username}" >профиль</a></td>
         </tr>
     </#list>
     </tbody>
